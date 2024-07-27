@@ -1,23 +1,22 @@
 import {
    Avatar,
   Box,
-  Button,
   Container,
-  ListItemIcon,
   Typography,
 } from "@mui/material";
-import { Icon } from "@iconify/react";
-import COLORS from "../../utils/COLORS";
-import { blue } from "@mui/material/colors";
 import { useLocation, useNavigate } from "react-router-dom";
 import useStore from "../../stores/hooks";
 import { dummyUserList } from "../../utils/dummyData";
+import { useState } from "react";
+import EditProfile from "../editProfile";
 
 const Rightbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname);
   const { user } = useStore();
+
+  const [openModal, setOpenModal] = useState<boolean>(false)
+
   return (
     <Box
       sx={{
@@ -35,7 +34,7 @@ const Rightbar = () => {
 
           <Box
             sx={{
-              width: 400,
+              width: "100%",
               height: 100,
               borderRadius: 1,
               bgcolor: "primary.main",
@@ -51,10 +50,10 @@ const Rightbar = () => {
               position: "absolute",
               color: "red",
             }}></Box>
-          <Box>
+          <Box
+            sx={{ width: "100%", justifyContent: "flex-end", display: "flex" , paddingRight: "20px" }}>
             <button
               style={{
-                marginLeft: 300,
                 marginTop: 10,
                 padding: 6,
                 borderRadius: 50,
@@ -63,7 +62,7 @@ const Rightbar = () => {
                 border: "1px solid white",
                 cursor: "pointer",
               }}
-              type="submit">
+              onClick={() => setOpenModal(true)}>
               Edit Profile
             </button>
           </Box>
@@ -74,7 +73,7 @@ const Rightbar = () => {
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
             <span
               onClick={() => {
-                navigate("/profile");
+                navigate("/my-profile");
               }}
               style={{ color: "gray", cursor: "pointer" }}>
               @audinafh
@@ -136,7 +135,9 @@ const Rightbar = () => {
                   width: "100%",
                 }}>
                 <div>
-                  <p onClick={() => navigate(`/profile/${post.userId}`)}>
+                  <p
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/profile/${post.userId}`)}>
                     {post.user.username}
                   </p>
                   <p style={{ color: "grey" }}>{post.user.email}</p>
@@ -175,6 +176,10 @@ const Rightbar = () => {
           ))}
         </div>
       </Container>
+
+      {openModal && (
+        <EditProfile open={openModal} onClose={() => setOpenModal(false)} />
+      )}
     </Box>
   );
 };

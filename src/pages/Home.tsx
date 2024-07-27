@@ -1,72 +1,15 @@
 import { useNavigate } from "react-router-dom"
-import { Icon } from "@iconify/react";
-import { Checkbox, FormControlLabel, TextField } from "@mui/material";
+import { Avatar, Checkbox, FormControlLabel, TextField } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
-
-const dummy = [
-  {
-    id :1,
-    userId: 1,
-    user :{
-      username :"Indah Prakarya"
-    },
-    content : "kalian pernah ga sih main instagram tapi ga bisa dibuka"
-  },
-  {
-    id :2,
-    user :{
-      username :"aji"
-    },
-    content : "kalian pernah ga dapet tim megang saber roam tapi mainnya jago",
-    
-  },
-  {
-    id :3,
-    user :{
-      username :"kaja"
-    },
-    content : "masih coba coba"
-  },
-  {
-    id :4,
-    user :{
-      username :"Leo"
-    },
-    content : "coba aja dari dulu saya kayak gini"
-  },
-  {
-    id :5,
-    user :{
-      username :"Pita"
-    },
-    content : "kalian tau ga"
-  },
-  {
-    id :6,
-    user :{
-      username :"Lila"
-    },
-    content : "Pisang itu sebenernya bergizi loh"
-  },
-  {
-    id :7,
-    user :{
-      username :"Piya"
-    },
-    content : "eh  gw mau nanya dong"
-  },
-  {
-    id :8,
-    user :{
-      username :"kity"
-    },
-    content : "kucing itu sejenis ga sih"
-  },
-];
+import { dummyContentList } from "../utils/dummyData";
+import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import useStore from "../stores/hooks";
 
 const Home = () => {
   const navigate = useNavigate();
+  const {user} = useStore()
 
   return (
     <div>
@@ -76,29 +19,22 @@ const Home = () => {
       <div
         style={{
           display: "flex",
-          marginBottom: 20,
+
           borderBottom: "1px solid  gray",
           paddingBottom: 10,
+          width: "100%",
         }}>
-        <Icon
-          icon={"gg:profile"}
-          style={{ marginLeft: 10, width: "20", height: "30" }}
-        />
+        <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+          <span style={{ fontSize: 10 }}>
+            {user.username.charAt(0).toUpperCase()}
+          </span>
+        </Avatar>
         <TextField
           id="text"
           label="What is Happening ?"
-          style={{ marginLeft: 20, width: "10" }}
+          style={{ marginLeft: 20, width: "60%", border: "none" }}
         />
-        <Icon
-          icon={"icon-park-outline:add-picture"}
-          style={{
-            marginRight: "10",
-            color: "green",
-            width: 50,
-            height: 30,
-            marginTop: 20,
-          }}
-        />
+        <AddPhotoAlternateOutlinedIcon />
 
         <button
           style={{
@@ -112,53 +48,62 @@ const Home = () => {
         </button>
       </div>
       <div>
-        {dummy.map((post) => (
-          <div style={{ display: "flex", borderBottom: "1px solid gray" }}>
-            <Icon
-              width={22}
-              icon={"iconamoon:profile-circle"}
-              style={{ margin: 10 }}
-            />
+        {dummyContentList.map((post) => (
+          <div
+            style={{
+              display: "flex",
+              borderBottom: "1px solid gray",
+              padding: " 10px",
+            }}>
+            {post.user.image ? (
+              <Avatar sx={{ width: 20, height: 20 }} src={post.user.image} />
+            ) : (
+              <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+                <span style={{ fontSize: 10 }}>
+                  {post.user.username.charAt(0).toUpperCase()}
+                </span>
+              </Avatar>
+            )}
             <div
-              key={post.id}
+              key={post.content.id}
               style={{ cursor: "pointer", paddingBottom: 10, paddingLeft: 8 }}>
               <h3
                 onClick={() => {
-                  navigate("/profile/" + post.userId);
+                  navigate("/profile/" + post.user.userId);
                 }}
                 style={{ cursor: "pointer", marginBottom: 4 }}>
                 {post.user.username}
               </h3>
               <p
                 onClick={() => {
-                  navigate("/detail/" + post.id);
+                  navigate("/detail/" + post.content.id);
                 }}
                 style={{ cursor: "pointer" }}>
-                {post.content}{" "}
+                {post.content.textContent}{" "}
               </p>
 
-              <div style={{ display: "flex" }}>
-                <Checkbox
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite sx={{color: "pink"}} />}
-                  sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding:0 }}
-                />
-                <p
-                  onClick={() => {
-                    navigate("/Follows");
-                  }}
-                  style={{ marginRight: 10 }}>
+              <div style={{ display: "flex", gap: 16 }}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <Checkbox
+                    icon={<FavoriteBorder />}
+                    checkedIcon={<Favorite sx={{ color: "pink" }} />}
+                    defaultChecked={post.content.isLike}
+                    sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
+                  />
                   <span style={{ color: "gray", paddingLeft: 6 }}>
-                    Followers
+                    {post.content.like}
                   </span>{" "}
-                </p>
-                <p
+                </div>
+                <div
+                  style={{ display: "flex", alignItems: "center" }}
                   onClick={() => {
                     navigate("/Replies");
                   }}>
-                  <Icon icon={"ic:baseline-comment"} />{" "}
-                  <span style={{ color: "gray", paddingLeft: 6 }}>Replies</span>{" "}
-                </p>
+                  <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
+                  <span style={{ color: "gray", paddingLeft: 6 }}>
+                    {post.content.replies}
+                  </span>{" "}
+                </div>
               </div>
             </div>
           </div>

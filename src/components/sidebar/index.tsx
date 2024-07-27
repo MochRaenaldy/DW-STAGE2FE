@@ -1,9 +1,9 @@
 import COLORS from "../../utils/COLORS";
 import NavItem from "./NavItem";
 import { Box, Button, Typography } from "@mui/material";
-import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import useStore, {} from "../../stores/hooks"
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 
 const Sidebar = () => {
    const navigate: any = useNavigate()
@@ -42,7 +42,7 @@ const Sidebar = () => {
             Create Post
          </Button>
          <Button
-            startIcon={<Icon icon="solar:logout-2-outline" />}
+            startIcon={<LogoutOutlinedIcon style={{rotate:"180deg"}}/>}
             sx={{ mt: "auto" }}  onClick={handlelogout}
          >
             Logout

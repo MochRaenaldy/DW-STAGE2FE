@@ -17,7 +17,7 @@ const SearchPage = () => {
 
   return (
     <div>
-      <div>
+      <div style={{padding:10 }}>
         <CustomInput
           placeholder="Search"
           startAdornment={
@@ -28,9 +28,14 @@ const SearchPage = () => {
           onChange={(e: any) => setSearch(e.target.value)}
         />
       </div>
-      <div style={{ marginTop: 50 }}>
+      <div style={{ marginTop: 22 }}>
         {newDummy.map((post) => (
-          <div style={{ display: "flex", borderBottom: "1px solid gray", padding: "10px" }}>
+          <div
+            style={{
+              display: "flex",
+              borderBottom: "1px solid gray",
+              padding: "10px",
+            }}>
             {post.image ? (
               <Avatar sx={{ width: 20, height: 20 }} src={post.image} />
             ) : (
@@ -40,24 +45,49 @@ const SearchPage = () => {
                 </span>
               </Avatar>
             )}
-            <div key={post.userId} style={{ paddingLeft: 8, display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <div
+              key={post.userId}
+              style={{
+                paddingLeft: 8,
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}>
               <div>
-                <p onClick={() => navigate(`/profile/${post.userId}`)} >{post.user.username}</p>
+                <p onClick={() => navigate(`/profile/${post.userId}`)}>
+                  {post.user.username}
+                </p>
                 <p style={{ color: "grey" }}>{post.user.email}</p>
               </div>
-              <button
-                style={{
-                  padding: 5,
-                  borderRadius: 50,
-                  color: "gray",
-                  backgroundColor: "#1d1d1d",
-                  border: "1px solid gray",
-                  cursor: "pointer",
-                  height: 30
-                }}
-                type="submit">
-                Following
-              </button>
+              {post.isFollow ? (
+                <button
+                  style={{
+                    padding: 5,
+                    borderRadius: 50,
+                    color: "gray",
+                    backgroundColor: "#1d1d1d",
+                    border: "1px solid gray",
+                    cursor: "pointer",
+                    height: 30,
+                  }}
+                  type="submit">
+                  Following
+                </button>
+              ) : (
+                <button
+                  style={{
+                    padding: 5,
+                    borderRadius: 50,
+                    color: "white",
+                    backgroundColor: "#1d1d1d",
+                    border: "1px solid ",
+                    cursor: "pointer",
+                    height: 30,
+                  }}
+                  type="submit">
+                  Follow
+                </button>
+              )}
             </div>
           </div>
         ))}

@@ -86,3 +86,61 @@ export const dummyUserList = [
 ];
 
 
+export const dummyContentList = [
+  {
+    content: {
+      id: 1,
+      textContent: "kalian pernah ga sih main instagram tapi ga bisa dibuka",
+      like: 200,
+      replies: 100,
+      isLike: false,
+    },
+    user: {
+      userId: 1,
+      username: "Clorinder",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png",
+    },
+  },
+  {
+    content: {
+      id: 6,
+      textContent: "Pisang itu sebenernya bergizi loh",
+      like: 100,
+      replies: 300,
+      isLike: true,
+    },
+    user: {
+      userId: 6,
+      username: "Chiori",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Chiori.png",
+    },
+  },
+  {
+    content: {
+      id: 4,
+      textContent: "Tasukete",
+      like: 2200,
+      replies: 10400,
+      isLike: true,
+    },
+    user: {
+      userId: 4,
+      username: "Yelan",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Yelan.png",
+    },
+  },
+  {
+    content: {
+      id: 5,
+      textContent: "Kono wa sekai subarashi",
+      like: 21100,
+      replies: 1400,
+      isLike: false,
+    },
+    user: {
+      userId: 5,
+      username: "Nahida",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Nahida.png",
+    },
+  },
+];

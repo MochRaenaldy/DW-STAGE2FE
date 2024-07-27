@@ -1,8 +1,7 @@
-import { Icon } from "@iconify/react/dist/iconify.js";
 import { useNavigate } from "react-router-dom";
 import { Box, Container, Typography } from "@mui/material";
-import Rightbar from "../components/rightbar/right";
 import useStore from "../stores/hooks";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -10,14 +9,22 @@ const Profile = () => {
 
   return (
     <div>
-      <Container style={{ border: "1px solid gray", padding: 10 }}>
-        <Typography variant="subtitle1" sx={{ fontWeight: "bold", ml: 1 }}>
+      <Container
+        style={{ border: "1px solid gray", padding: 10, width: "100%" }}>
+        <div style={{ display: "flex" }}>
+          <p
+            style={{ marginLeft: 10, cursor: "pointer" }}
+            onClick={() => {
+              navigate("/");
+            }}>
+            <ArrowBackOutlinedIcon />
+          </p>{" "}
           My Profile
-        </Typography>
+        </div>
 
         <Box
           sx={{
-            width: 400,
+            width: "1s00%",
             height: 100,
             borderRadius: 1,
             bgcolor: "primary.main",
@@ -33,10 +40,15 @@ const Profile = () => {
             position: "fixed",
             color: "red",
           }}></Box>
-        <Box>
+        <Box
+          sx={{
+            width: "100%",
+            justifyContent: "flex-end",
+            display: "flex",
+            paddingRight: "20px",
+          }}>
           <button
             style={{
-              marginLeft: 300,
               marginTop: 10,
               padding: 6,
               borderRadius: 50,
@@ -45,7 +57,8 @@ const Profile = () => {
               border: "1px solid white",
               cursor: "pointer",
             }}
-            type="submit">
+            // onClick={() => setOpenModal(true)}
+            >
             Edit Profile
           </button>
         </Box>
@@ -56,7 +69,7 @@ const Profile = () => {
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
           <span
             onClick={() => {
-              navigate("/profile");
+              navigate("/my-profile");
             }}
             style={{ color: "gray", cursor: "pointer" }}>
             @audinafh
