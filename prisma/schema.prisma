@@ -16,7 +16,51 @@ datasource db {
 
 model User {
   id       Int  @id @default(autoincrement())
+  email    String?
   username String
+  fullName String?
   password String
   profile_pic String?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+
+  posts Posts[]
+  liked Like[]
+  follow Follow[]
+}
+
+model Posts {
+  id        Int      @id @default(autoincrement())
+  content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+  userId    Int
+  parentId  Int?
+  
+  post     Posts?      @relation("PostReplies", fields: [parentId], references: [id])
+  comments Posts[]     @relation("PostReplies")
+  author User @relation(fields: [userId], references: [id])
+  images   PostImage[]
+  likes    Like[]
+}
+
+model PostImage {
+  id     Int    @id @default(autoincrement())
+  image  String
+  postId Int
+  post   Posts  @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  userId Int
+  postId Int
+  user   User  @relation(fields: [userId], references: [id])
+  post   Posts @relation(fields: [postId], references: [id])
+  @@id([userId, postId])
+}
+
+model Follow {
+  userId Int
+  user   User  @relation(fields: [userId], references: [id])
+  @@id([userId])
 }

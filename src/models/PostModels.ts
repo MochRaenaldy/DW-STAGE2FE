@@ -1,9 +1,6 @@
 export interface PostModels {
-  title: string;
-  body: string;
+  id: number;
+  content: string;
+  createdAt: Date;
   userId: number;
-  username:string;
-  email :string;
-  bio:string;
-
 }
