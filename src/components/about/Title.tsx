@@ -1,5 +1,5 @@
 
-const Title = (props) => {
+const Title = (props : any) => {
 
     console.log(props);
 

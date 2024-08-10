@@ -1,9 +1,4 @@
-import {
-   Avatar,
-  Box,
-  Container,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, Container, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import useStore from "../../stores/hooks";
 import { dummyUserList } from "../../utils/dummyData";
@@ -15,7 +10,7 @@ const Rightbar = () => {
   const location = useLocation();
   const { user } = useStore();
 
-  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   return (
     <Box
@@ -37,21 +32,31 @@ const Rightbar = () => {
               width: "100%",
               height: 100,
               borderRadius: 1,
-              bgcolor: "primary.main",
+              backgroundImage:
+                "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)",
             }}
           />
           <Box
             sx={{
-              mt: -6,
+              mt: "-30px",
               ml: 2,
-              width: 10,
-              border: "50px solid",
               borderRadius: 50,
               position: "absolute",
-              color: "red",
-            }}></Box>
+            }}>
+            <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
+              <span style={{ fontSize: 10 }}>
+                {user.username}
+                {/* {user.username.charAt(0).toUpperCase()} */}
+              </span>
+            </Avatar>
+          </Box>
           <Box
-            sx={{ width: "100%", justifyContent: "flex-end", display: "flex" , paddingRight: "20px" }}>
+            sx={{
+              width: "100%",
+              justifyContent: "flex-end",
+              display: "flex",
+              paddingRight: "20px",
+            }}>
             <button
               style={{
                 marginTop: 10,
@@ -66,7 +71,7 @@ const Rightbar = () => {
               Edit Profile
             </button>
           </Box>
-          <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1, mt: 3 }}>
+          <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1, mt: 2 }}>
             {user.fullName}
           </Typography>
 
@@ -122,13 +127,14 @@ const Rightbar = () => {
               ) : (
                 <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                   <span style={{ fontSize: 10 }}>
-                    {post.user.username.charAt(0).toUpperCase()}
+                    {post.user.username}
+                    {/* {post.user.username.charAt(0).toUpperCase()} */}
                   </span>
                 </Avatar>
               )}
               <div
                 key={post.userId}
-                style={{
+                style={{ 
                   paddingLeft: 8,
                   display: "flex",
                   justifyContent: "space-between",

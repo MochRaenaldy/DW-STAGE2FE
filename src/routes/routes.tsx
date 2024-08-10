@@ -3,7 +3,7 @@ import Home from "../pages/Home";
 // import About from "../pages/About";
 // import Landingpage from "../pages/Landingpage";
 import RootLayout from "../layout/RootLayout";
-import AuthLayout from "../layout/AuthLayoyut";
+import AuthLayout from "../layout/AuthLayout";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import Forgot from "../pages/Forgot";
@@ -51,7 +51,7 @@ const routes: RouteObject[] = [
     ],
   },
   {
-    path: "/",
+    path: "/auth",
     element: <AuthLayout />,
     children: [
       {

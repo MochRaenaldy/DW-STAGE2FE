@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import { Box, Container, Typography } from "@mui/material";
+import { Avatar, Box, Container, Typography } from "@mui/material";
 import useStore from "../stores/hooks";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import EditProfile from "../components/editProfile";
+import { useState } from "react";
 
 const Profile = () => {
   const navigate = useNavigate();
- const { user } = useStore();
+  const { user } = useStore();
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   return (
     <div>
@@ -24,22 +27,27 @@ const Profile = () => {
 
         <Box
           sx={{
-            width: "1s00%",
+            width: "100%",
             height: 100,
             borderRadius: 1,
-            bgcolor: "primary.main",
+            backgroundImage:
+              "linear-gradient(to right top, #051937, #004d7a, #008793, #00bf72, #a8eb12)",
           }}
         />
         <Box
           sx={{
-            mt: -6,
+            mt: "-30px",
             ml: 2,
-            width: 10,
-            border: "50px solid",
             borderRadius: 50,
-            position: "fixed",
-            color: "red",
-          }}></Box>
+            position: "absolute",
+          }}>
+          <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
+            <span style={{ fontSize: 10 }}>
+              {user.username}
+              {/* {user.username.charAt(0).toUpperCase()x} */}
+            </span>
+          </Avatar>
+        </Box>
         <Box
           sx={{
             width: "100%",
@@ -57,8 +65,7 @@ const Profile = () => {
               border: "1px solid white",
               cursor: "pointer",
             }}
-            // onClick={() => setOpenModal(true)}
-            >
+            onClick={() => setOpenModal(true)}>
             Edit Profile
           </button>
         </Box>
@@ -84,7 +91,10 @@ const Profile = () => {
           <span style={{ color: "gray" }}>Followers</span>
         </Typography>
       </Container>
+      {openModal && (
+        <EditProfile open={openModal} onClose={() => setOpenModal(false)} />
+      )}
     </div>
   );
-}
-export default Profile
+};
+export default Profile;

@@ -8,7 +8,7 @@ const RootLayout = () => {
    const { isLogin } = useStore();
 
    if (!isLogin) {
-      return <Navigate to="/login" />;
+      return <Navigate to="/auth/login" />;
    }
 
    return (

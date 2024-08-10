@@ -5,6 +5,7 @@ import CustomInput from "../common/Input";
 import { useRegisterValidation } from "./hooks/useRegisterValidation";
 import { Link, useNavigate } from "react-router-dom";
 import useStore from "../../stores/hooks";
+import { useRegisterFunction } from "./hooks/useRegisterFunction";
 
 interface IRegisterProps {
    title?: string;
@@ -12,14 +13,17 @@ interface IRegisterProps {
 
 const RegisterForm = ({ title }: IRegisterProps) => {
    const { control, handleSubmit, reset, watch } = useRegisterValidation();
+   const registerFunction = useRegisterFunction();
    const navigate = useNavigate()
    const { setUser } = useStore();
-   const onSubmit = (data: IRegisterForm) => {
-      setUser({
-        ...data
-      })
-      navigate("/")
+   const onSubmit = async (data: IRegisterForm) => {
+      await registerFunction.register(data);
       reset();
+      // setUser({
+      //   ...data
+      // })
+      // navigate("/")
+      // reset();
    };
 
    const onError = (errors: any) => {

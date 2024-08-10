@@ -9,7 +9,7 @@ const Sidebar = () => {
    const navigate: any = useNavigate()
    const { clearUser } = useStore();
    const handlelogout = () => {
-      navigate("/login")
+      navigate("/auth/login")
       clearUser()
    }
    return (

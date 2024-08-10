@@ -61,7 +61,8 @@ const Profile = () => {
                     background: "white",
                   }}>
                   <span style={{ fontSize: 50 }}>
-                    {profile.user.username.charAt(0).toUpperCase()}
+                    {profile.user.username}
+                    {/* {profile.user.username.charAt(0).toUpperCase()} */}
                   </span>
                 </Avatar>
               )}

@@ -94,9 +94,11 @@ export const dummyContentList = [
       like: 200,
       replies: 100,
       isLike: false,
+      time: "11.32AM July 26 Maret 2024",
     },
     user: {
       userId: 1,
+      email: "Clorinder@gmail.com",
       username: "Clorinder",
       image: "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png",
     },
@@ -112,6 +114,7 @@ export const dummyContentList = [
     user: {
       userId: 6,
       username: "Chiori",
+      email: "Chiori@gmail.com",
       image: "https://rerollcdn.com/GENSHIN/Characters/1/Chiori.png",
     },
   },
@@ -126,6 +129,7 @@ export const dummyContentList = [
     user: {
       userId: 4,
       username: "Yelan",
+      email: "Yelan@gmail.com",
       image: "https://rerollcdn.com/GENSHIN/Characters/1/Yelan.png",
     },
   },
@@ -140,7 +144,93 @@ export const dummyContentList = [
     user: {
       userId: 5,
       username: "Nahida",
+      email: "Nahida@gmail.com",
       image: "https://rerollcdn.com/GENSHIN/Characters/1/Nahida.png",
+    },
+  },
+  {
+    content: {
+      id: 7,
+      textContent: "Keqing Wangi Wangi",
+      like: 25100,
+      replies: 400,
+      isLike: false,
+    },
+    user: {
+      userId: 7,
+      username: "Keqing",
+      email: "Keqing@gmail.com",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Keqing.png",
+    },
+  },
+  {
+    content: {
+      id: 2,
+      textContent: "come to you",
+      like: 35900,
+      replies: 9400,
+      isLike: true,
+      time: "11.32 AM ",
+    },
+    user: {
+      userId: 2,
+      username: "Ganyu",
+      email: "Ganyu@gmail.com",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Ganyu.png",
+    },
+  },
+  {
+    content: {
+      id: 3,
+      textContent: "Hutao dayo",
+      like: 12900,
+      replies: 2100,
+      isLike: true,
+    },
+    user: {
+      userId: 3,
+      username: "Hutao",
+      email: "Hutao@gmail.com",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Hu%20Tao.png",
+    },
+  },
+];
+
+export const dummyRepliesContent = [
+  {
+    contentReplies: {
+      id: 1,
+      contentId: 1,
+      textReplies: "pernah sih, tapi saya tak peduli",
+      like: 200,
+      replies: 100,
+      isLike: false,
+      time: "4h",
+    },
+    userId: 7,
+    user: {
+      userId: 7,
+      username: "Keqing",
+      email: "Keqing@gmail.com",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Keqing.png",
+    },
+  },
+  {
+    contentReplies: {
+      id: 1,
+      contentId: 6,
+      textReplies: "pernah sih, tapi saya tak peduli",
+      like: 200,
+      replies: 400,
+      isLike: false,
+      time: "8h",
+    },
+    userId: 1,
+    user: {
+      userId: 1,
+      email: "Clorinder@gmail.com",
+      username: "Clorinder",
+      image: "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png",
     },
   },
 ];

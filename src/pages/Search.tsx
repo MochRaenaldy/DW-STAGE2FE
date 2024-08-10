@@ -17,7 +17,7 @@ const SearchPage = () => {
 
   return (
     <div>
-      <div style={{padding:10 }}>
+      <div style={{ padding: 10 }}>
         <CustomInput
           placeholder="Search"
           startAdornment={
@@ -41,7 +41,8 @@ const SearchPage = () => {
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                 <span style={{ fontSize: 10 }}>
-                  {post.user.username.charAt(0).toUpperCase()}
+                  {post.user.username}
+                  {/* {post.user.username.charAt(0).toUpperCase()} */}
                 </span>
               </Avatar>
             )}
@@ -58,6 +59,7 @@ const SearchPage = () => {
                   {post.user.username}
                 </p>
                 <p style={{ color: "grey" }}>{post.user.email}</p>
+                <p> {post.user.bio}</p>
               </div>
               {post.isFollow ? (
                 <button
