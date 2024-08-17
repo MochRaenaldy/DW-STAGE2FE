@@ -1,16 +1,49 @@
 import { Avatar, Box, Container, Typography } from "@mui/material";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useStore from "../../stores/hooks";
 import { dummyUserList } from "../../utils/dummyData";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditProfile from "../editProfile";
+import { IProfile } from "../../pages/Profile";
+import { getUserById, getUserByUsername } from "../../libs/api/call/user";
+import { IUserList } from "../../types/store";
+
+const defaultData = {
+  id: 0,
+  email: "",
+  username: "",
+  fullName: "",
+  password: "",
+  bio: "",
+  profile_pic: "",
+  createdAt: "",
+  updatedAt: "",
+  isFollow: false,
+  followers: 0,
+  following: 0,
+};
 
 const Rightbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useStore();
-
+  const params = useParams();
+  const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
+
+  const fetchingData = async () => {
+    const res = await getUserByUsername(params.username);
+    console.log(res);
+    if (res && res?.status === 200) {
+      setDataUser(res?.data);
+    } else {
+      setDataUser([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchingData();
+  }, []);
 
   return (
     <Box
@@ -72,7 +105,7 @@ const Rightbar = () => {
             </button>
           </Box>
           <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1, mt: 2 }}>
-            {user.fullName}
+            {user.username}
           </Typography>
 
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
@@ -81,16 +114,22 @@ const Rightbar = () => {
                 navigate("/my-profile");
               }}
               style={{ color: "gray", cursor: "pointer" }}>
-              @audinafh
+              {user.fullName}
             </span>
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 1 }}>
-            Picked over the worms , and weird fishes
+            {user.bio}
           </Typography>
 
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-            291 <span style={{ color: "gray" }}>Following </span> 23{" "}
-            <span style={{ color: "gray" }}>Followers</span>
+            <span style={{ color: "gray" }}>
+              {/*dataUser.following*/} Following
+            </span>{" "}
+            {
+              <span style={{ color: "gray" }}>
+                {/*dataUser.followers*/} Followers{" "}
+              </span>
+            }
           </Typography>
         </Container>
       )}
@@ -134,7 +173,7 @@ const Rightbar = () => {
               )}
               <div
                 key={post.userId}
-                style={{ 
+                style={{
                   paddingLeft: 8,
                   display: "flex",
                   justifyContent: "space-between",

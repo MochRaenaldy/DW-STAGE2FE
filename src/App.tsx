@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { api, setAuthToken } from "./libs/api";
+import * as authAsync from "./libs/api/call/auth";
 import routes from "./routes/routes";
 import useStore from "./stores/hooks";
 
@@ -14,16 +15,16 @@ function App() {
     }
 
     try {
-      const response = await api.get("/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setUser(response.data.data);
+      const response = await authAsync.checkAuth(token);
+      console.log(response);
+      setUser(response.data);
       setAuthToken(token);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.response.data.statusCode === 401) {
+        if (error.response.data.status === "expired jwt") {
+          console.log("Expired JWT")
+        }
+      }
       setAuthToken();
     }
   }

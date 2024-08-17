@@ -20,12 +20,13 @@ export const StoreProvider: React.FC<StoreProps> = ({ children }) => {
     email: "",
     fullName: "",
     username: "",
+    bio: "",
   });
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
   const setUser = (user: IUser) => {
     setUserState(user);
-    setIsLogin(true);
+    // setIsLogin(true);
   };
 
   const clearUser = () => {
@@ -33,20 +34,21 @@ export const StoreProvider: React.FC<StoreProps> = ({ children }) => {
       email: "",
       fullName: "",
       username: "",
+      bio :"",
     });
 
-    setIsLogin(false);
+    // setIsLogin(false);
     localStorage.removeItem("token");
     localStorage.clear();
   };
 
-  console.log(user, isLogin);
+  // console.log(user, isLogin);
 
   return (
     <Store.Provider
       value={{
         user,
-        isLogin,
+        // isLogin,
         setUser,
         clearUser,
       }}>

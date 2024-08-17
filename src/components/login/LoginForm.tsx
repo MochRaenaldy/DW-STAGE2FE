@@ -4,7 +4,9 @@ import {
   CircularProgress,
   FormControl,
   FormHelperText,
+  IconButton,
   Input,
+  InputAdornment,
   Typography,
 } from "@mui/material";
 // import TextField from "../common/Textfield"
@@ -17,12 +19,14 @@ import { IUser } from "../../types/store";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ILoginForm } from "../../types/login";
 import { useLoginFunction } from "./useLoginfunction";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LoginForm = () => {
   const Loginfunc = useLoginFunction();
   const [message, setMessage] = useState<string>("");
   const [successLogin, setSuccessLogin] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useStore();
   const schema = yup.object({
@@ -42,10 +46,12 @@ const LoginForm = () => {
   const handleOnSubmit: SubmitHandler<ILoginForm> = async (data) => {
     setLoading(true);
     const res = await Loginfunc.login(data.username, data.password);
-    console.log(res);
     if (res?.token) {
       setMessage("Login Success");
       setSuccessLogin(true);
+      setTimeout(() => {
+        window.location.replace("/");
+      }, 2000);
     } else {
       setMessage(res?.data?.message);
       setSuccessLogin(false);
@@ -106,7 +112,22 @@ const LoginForm = () => {
         name="password"
         render={({ field, fieldState }) => (
           <FormControl error={Boolean(fieldState.error)}>
-            <CustomInput placeholder="Password" sx={{ mb: 2 }} {...field} />
+            <CustomInput
+              placeholder="Password"
+              sx={{ mb: 2 }}
+              {...field}
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end">
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
             {Boolean(fieldState.error) && (
               <FormHelperText>{fieldState.error?.message}</FormHelperText>
             )}
@@ -125,7 +146,7 @@ const LoginForm = () => {
       </button>
       <Typography variant="body2" color="white">
         Don't have an account yet?{" "}
-        <Link to="/register" style={{ textDecoration: "none" }}>
+        <Link to="/auth/register" style={{ textDecoration: "none" }}>
           <span style={{ color: "green", textDecoration: "none" }}>
             Create Account
           </span>

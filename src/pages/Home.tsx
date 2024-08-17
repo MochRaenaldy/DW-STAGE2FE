@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import {
+  Alert,
   Avatar,
   Checkbox,
   FormControlLabel,
   Input,
+  Snackbar,
   TextField,
 } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
@@ -13,33 +15,52 @@ import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import useStore from "../stores/hooks";
 import CustomInput from "../components/common/Input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { api } from "../libs/api";
+import { createPost, getPost } from "../libs/api/call/home";
 
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useStore();
   const [input, setInput] = useState("");
+  const [dataPost, setDataPost] = useState([]);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [successPost, setSuccessPost] = useState(false);
+  const [message, setMessage] = useState("");
 
   const handleSendPost = async () => {
-    try {
-     const res = await axios.post(
-       "http://localhost:3000/posts",
-       {
-         content: input,
-       },
-       {
-         headers: {
-           Authorization: `Bearer ${localStorage.getItem("token")}`,
-         },
-       }
-     );
-
-     console.log(res);
-    } catch (error) {
-      console.log(error);
+    const body = {
+      content: input,
+    };
+    const response = await createPost(body);
+    if (response && response?.status === 200) {
+      setMessage("Success Create Postingan");
+      setSuccessPost(true);
+      setOpenAlert(true);
+      fetchingData();
+      setInput("");
+    } else {
+      setMessage("Failed Create Postingan");
+      setSuccessPost(false);
+      setOpenAlert(true);
+      fetchingData();
+      setInput("");
     }
   };
+
+  const fetchingData = async () => {
+    const res = await getPost();
+    if (res && res?.status === 200) {
+      setDataPost(res?.data);
+    } else {
+      setDataPost([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchingData();
+  }, []);
 
   return (
     <div>
@@ -100,58 +121,61 @@ const Home = () => {
         </div>
       </div>
       <div>
-        {dummyContentList.map((post) => (
+        {dataPost.map((post: any) => (
           <div
             style={{
               display: "flex",
               borderBottom: "1px solid gray",
               padding: " 10px",
             }}>
-            {post.user.image ? (
-              <Avatar sx={{ width: 20, height: 20 }} src={post.user.image} />
+            {post?.author?.profile_pic ? (
+              <Avatar
+                sx={{ width: 20, height: 20 }}
+                src={post.author.profile_pic}
+              />
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                 <span style={{ fontSize: 10, display: "flex" }}>
-                  {post.user.username}
+                  {post.author.username}
                   {/* {post.user.username.charAt(0).toUpperCase()} */}
                 </span>
               </Avatar>
             )}
             <div
-              key={post.content.id}
+              key={post.id}
               style={{ cursor: "pointer", paddingBottom: 10, paddingLeft: 8 }}>
               <div style={{ display: "flex" }}>
                 <h3
                   onClick={() => {
-                    navigate("/profile/" + post.user.userId);
+                    navigate("/profile/" + post.author.id);
                   }}
                   style={{
                     cursor: "pointer",
                     marginBottom: 4,
                     marginRight: "10px",
                   }}>
-                  {post.user.username}
+                  {post.author.username}
                 </h3>
-                <p style={{ color: "gray" }}> {post.user.email}</p>
+                <p style={{ color: "gray" }}> {post.author.email || ""}</p>
               </div>
 
               <p
                 onClick={() => {
-                  navigate("/detail/" + post.content.id);
+                  navigate("/detail/" + post.id);
                 }}
                 style={{ cursor: "pointer" }}>
-                {post.content.textContent}{" "}
+                {post.content}{" "}
               </p>
               <div style={{ display: "flex", gap: 16 }}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Checkbox
                     icon={<FavoriteBorder />}
                     checkedIcon={<Favorite sx={{ color: "pink" }} />}
-                    defaultChecked={post.content.isLike}
+                    defaultChecked={post.isLike ? true : false}
                     sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
                   />
                   <span style={{ color: "gray", paddingLeft: 6 }}>
-                    {post.content.like}
+                    {post.like || 0}
                   </span>{" "}
                 </div>
                 <div
@@ -161,7 +185,7 @@ const Home = () => {
                   }}>
                   <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                   <span style={{ color: "gray", paddingLeft: 6 }}>
-                    {post.content.replies}
+                    {post.replies || 0}
                   </span>{" "}
                 </div>
               </div>
@@ -169,6 +193,18 @@ const Home = () => {
           </div>
         ))}
       </div>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        onClose={() => setOpenAlert(false)}>
+        <Alert
+          severity={successPost ? "success" : "error"}
+          variant="filled"
+          sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

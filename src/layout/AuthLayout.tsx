@@ -2,11 +2,13 @@ import { Navigate, Outlet } from "react-router-dom";
 import useStore from "../stores/hooks";
 
 const AuthLayout = () => {
-   const { isLogin } = useStore();
+   // const { isLogin } = useStore();
+   const isLogin = localStorage.getItem("token");
 
-   if (isLogin) {
+   if (isLogin && isLogin !== undefined && isLogin !== "undefined") {
       return <Navigate to="/" />;
    }
+
 
    return <Outlet />;
 };

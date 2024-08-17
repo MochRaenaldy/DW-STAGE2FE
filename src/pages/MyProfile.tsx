@@ -1,14 +1,62 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Avatar, Box, Container, Typography } from "@mui/material";
-import useStore from "../stores/hooks";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import EditProfile from "../components/editProfile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUserById } from "../libs/api/call/user";
+import useStore from "../stores/hooks";
+
+export interface IProfile {
+  id: number;
+  email: string;
+  username: string;
+  fullName: string;
+  password: string;
+  bio: string;
+  profile_pic: string;
+  createdAt: string;
+  updatedAt: string;
+  isFollow: boolean;
+  following: number;
+  followers: number;
+}
+
+const defaultData = {
+  id: 0,
+  email: "",
+  username: "",
+  fullName: "",
+  password: "",
+  bio: "",
+  profile_pic: "",
+  createdAt: "",
+  updatedAt: "",
+  isFollow: false,
+  followers: 0,
+  following: 0,
+};
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user } = useStore();
+  // const params = useParams();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  // const [dataUser, setDataUser] = useState<IProfile>(defaultData);
+  // console.log(typeof params.id);
+
+  // const fetchingData = async () => {
+  //   const res = await getUserById(params.id);
+  //   console.log(res);
+  //   if (res && res?.status === 200) {
+  //     setDataUser(res?.data);
+  //   } else {
+  //     setDataUser(defaultData);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchingData();
+  // }, []);
 
   return (
     <div>
@@ -79,11 +127,11 @@ const Profile = () => {
               navigate("/my-profile");
             }}
             style={{ color: "gray", cursor: "pointer" }}>
-            @audinafh
+            {user.email}
           </span>
         </Typography>
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 1 }}>
-          Picked over the worms , and weird fishes
+          {user.bio}
         </Typography>
 
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
