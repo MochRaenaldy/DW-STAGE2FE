@@ -13,14 +13,19 @@ export const findById = async (id: number) => {
   });
 };
 
-export const findByUsername = async (username : string) => {
-  return await db.user.findFirst({
-    where: { username },
+export const findByUsername = async (username: string) => {
+  console.log(username);
+  return await db.user.findMany({
+    where: {
+      username: {
+        contains: username,
+      },
+    },
   });
 };
 
 export const update = async (id: number, post: IUser) => {
-  console.log(post)
+  console.log(post);
   const updatedPost = await db.user.update({
     data: post,
     where: { id },

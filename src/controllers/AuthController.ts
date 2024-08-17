@@ -53,12 +53,12 @@ export const checkAuth = async (req: Request, res: Response) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "error check auth");
 
     errorHandler(res, error as unknown as Error);
   }
 };
 
 export function profile(arg0: string, profile: any) {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }

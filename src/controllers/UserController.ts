@@ -14,17 +14,18 @@ export const findById = async (req: Request, res: Response) => {
 };
 
 export async function findByUsername(req: Request, res: Response) {
+  console.log(req.params)
   const user = await userservice.findByUsername(req.params.username);
   res.json(user);
 }
 
-export const  update = async (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response) => {
   const user = await userservice.update(parseInt(req.params.id), req.body);
-  console.log(user)
-   res.json({
-     message: "update successfully",
-     data: user,
-   });
+  console.log(user);
+  res.json({
+    message: "update successfully",
+    data: user,
+  });
 };
 
 // export const remove = (req: Request, res: Response) => {
@@ -34,7 +35,6 @@ export const  update = async (req: Request, res: Response) => {
 //     data: user,
 //   });
 // };
-
 
 // export const create = async (req: Request, res: Response) => {
 //   try {

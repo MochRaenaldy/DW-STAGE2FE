@@ -5,9 +5,9 @@ import upload from "../middlewares/fileUpload";
 import authorization from "../middlewares/authorization";
 const postRoute = Router();
 
-postRoute.get("/", postController.findAll);
+postRoute.get("/", authorization, postController.findAll);
 
-postRoute.get("/:id", postController.findById);
+postRoute.get("/:id", authorization, postController.findById);
 
 postRoute.post(
   "/",
@@ -16,8 +16,8 @@ postRoute.post(
   postController.create
 );
 
-postRoute.put("/:id", postController.update);
+postRoute.put("/:id", authorization, postController.update);
 
-postRoute.delete("/:id", postController.remove);
+postRoute.delete("/:id", authorization, postController.remove);
 
 export default postRoute;

@@ -8,7 +8,7 @@ userRoute.get("/", userController.findAll);
 
 userRoute.get("/:id", userController.findById);
 
-userRoute.get("/:username", userController.findByUsername);
+userRoute.get("/search/:username", userController.findByUsername);
 
 userRoute.put("/:id", userController.update);
 
