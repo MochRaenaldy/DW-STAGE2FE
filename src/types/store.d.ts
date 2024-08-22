@@ -14,6 +14,8 @@ export interface IUser {
   email: string;
   fullName: string;
   bio: string;
+  id?: number,
+  profile_pict?: string
 }
 
 export interface IProfile {

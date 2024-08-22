@@ -1,15 +1,20 @@
 import {
+  Alert,
   Avatar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  Snackbar,
 } from "@mui/material";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import CustomInput from "../common/Input";
 import { useRef, useState } from "react";
 import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
+import { getUserById, update } from "../../libs/api/call/user";
+import useStore from "../../stores/hooks";
+import { checkAuth } from "../../libs/api/call/auth";
 
 interface IModal {
   open: boolean;
@@ -19,11 +24,47 @@ interface IModal {
 const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
   const refImage: any = useRef(null);
   const [photo, setPhoto] = useState<any>(null);
-
+  const [openAlert, setOpenAlert] = useState(false);
+  const [successPost, setSuccessPost] = useState(false);
+  const [message, setMessage] = useState("");
+  const {user} = useStore()
+  const [form, setForm] = useState(user)
+  const { setUser } = useStore(); 
   const handleChangePhoto = (e: any) => {
     const objectUrl = URL.createObjectURL(e.target.files[0]);
     setPhoto(objectUrl);
   };
+
+  const handleChangeForm = (e: any) => {
+      setForm({...form, [e.target.name]: e.target.value})
+  }
+
+  
+  const getProfile = async() => {
+    const res = await checkAuth()
+    if (res?.data) {
+      setUser(res?.data)
+    }
+  }
+
+  const handleupdate = async () => {
+    const body = {
+     ...form
+    };
+     const response = await update(Number(user?.id), body);
+    if (response && response?.status === 200) {
+      setMessage("Success update user");
+      getProfile()
+      setSuccessPost(true);
+      setOpenAlert(true);
+      onClose()
+    } else {
+      setMessage("Failed update user");
+      setSuccessPost(false);
+      setOpenAlert(true);
+    }
+  };
+
 
   return (
     <Dialog
@@ -98,9 +139,27 @@ const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-          <CustomInput placeholder="Name" autoComplete="none" />
-          <CustomInput placeholder="Username" />
-          <CustomInput placeholder="Bio" rows={5} multiline />
+          <CustomInput
+            placeholder="Name"
+            name="fullName"
+            value={form.fullName}
+            autoComplete="none"
+            onChange={(e) => handleChangeForm(e)}
+          />
+          <CustomInput
+            placeholder="Username"
+            name="username"
+            value={form.username}
+            onChange={(e) => handleChangeForm(e)}
+          />
+          <CustomInput
+            placeholder="Bio"
+            name="bio"
+            value={form.bio}
+            onChange={(e) => handleChangeForm(e)}
+            rows={5}
+            multiline
+          />
         </div>
       </DialogContent>
       <DialogActions>
@@ -113,10 +172,22 @@ const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
             textTransform: "capitalize",
             color: "#fff",
           }}
-          onClick={() => console.log("test")}>
+          onClick={handleupdate}>
           Save
         </Button>
       </DialogActions>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={2000}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        onClose={() => setOpenAlert(false)}>
+        <Alert
+          severity={successPost ? "success" : "error"}
+          variant="filled"
+          sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };

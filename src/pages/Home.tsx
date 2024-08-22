@@ -87,7 +87,7 @@ const Home = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="What is Happening ?"
-            style={{ marginLeft: 20, width: "90%", border: "none" }}
+            style={{ marginLeft: 20, width: "90%", border: "none", }}
           />
         </div>
         <div

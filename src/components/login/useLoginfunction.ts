@@ -8,11 +8,10 @@ export const useLoginFunction = () => {
   const login = async (username: string, password: string) => {
     try {
       const resLogin = await authAsync.login(username, password);
-
-      const profile = await authAsync.checkAuth(resLogin.token);
+      // const profile = await authAsync.checkAuth();
 
       setTimeout(() => {
-        setUser(profile);
+        // setUser(profile);
         setAuthToken(resLogin.token);
         localStorage.setItem("token", resLogin.token);
       }, 2000);

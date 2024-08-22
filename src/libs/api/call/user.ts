@@ -9,3 +9,13 @@ export const getUserByUsername = async (username: any) => {
   const response = await api.get(`/users/search/${username}`);
   return response;
 };
+
+export const findAll = async () => {
+  const response = await api.get(`/users`);
+  return response;
+};
+
+export const update = async (id: number, body :any) => {
+  const response = await api.put(`/users/update/${id}`, body);
+  return response;
+};

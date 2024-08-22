@@ -11,11 +11,7 @@ export const register = async (body: IRegisterForm) => {
   return response.data;
 };
 
-export const checkAuth = async (token: string) => {
-  const response = await api.get("/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const checkAuth = async () => {
+  const response = await api.get("/auth/me");
   return response.data;
 };

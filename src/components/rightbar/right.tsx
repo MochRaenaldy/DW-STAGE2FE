@@ -5,23 +5,12 @@ import { dummyUserList } from "../../utils/dummyData";
 import { useEffect, useState } from "react";
 import EditProfile from "../editProfile";
 import { IProfile } from "../../pages/Profile";
-import { getUserById, getUserByUsername } from "../../libs/api/call/user";
+import {
+  findAll,
+  getUserById,
+  getUserByUsername,
+} from "../../libs/api/call/user";
 import { IUserList } from "../../types/store";
-
-const defaultData = {
-  id: 0,
-  email: "",
-  username: "",
-  fullName: "",
-  password: "",
-  bio: "",
-  profile_pic: "",
-  createdAt: "",
-  updatedAt: "",
-  isFollow: false,
-  followers: 0,
-  following: 0,
-};
 
 const Rightbar = () => {
   const navigate = useNavigate();
@@ -32,7 +21,7 @@ const Rightbar = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
 
   const fetchingData = async () => {
-    const res = await getUserByUsername(params.username);
+    const res = await findAll();
     console.log(res);
     if (res && res?.status === 200) {
       setDataUser(res?.data);
@@ -154,71 +143,77 @@ const Rightbar = () => {
         </div>
 
         <div>
-          {dummyUserList.map((post) => (
-            <div
-              style={{
-                display: "flex",
-                borderBottom: "1px solid gray",
-                padding: "10px",
-              }}>
-              {post.image ? (
-                <Avatar sx={{ width: 20, height: 20 }} src={post.image} />
-              ) : (
-                <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
-                  <span style={{ fontSize: 10 }}>
-                    {post.user.username}
-                    {/* {post.user.username.charAt(0).toUpperCase()} */}
-                  </span>
-                </Avatar>
-              )}
+          {dataUser &&
+            dataUser?.map((post) => (
               <div
-                key={post.userId}
                 style={{
-                  paddingLeft: 8,
                   display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
+                  borderBottom: "1px solid gray",
+                  padding: "10px",
                 }}>
-                <div>
-                  <p
-                    style={{ cursor: "pointer" }}
-                    onClick={() => navigate(`/profile/${post.userId}`)}>
-                    {post.user.username}
-                  </p>
-                  <p style={{ color: "grey" }}>{post.user.email}</p>
-                </div>
-                {post.isFollow ? (
-                  <button
-                    style={{
-                      padding: 5,
-                      borderRadius: 50,
-                      color: "gray",
-                      backgroundColor: "#1d1d1d",
-                      border: "1px solid gray",
-                      cursor: "pointer",
-                      height: 30,
-                    }}
-                    type="submit">
-                    Following
-                  </button>
+                {post.profile_pic ? (
+                  <Avatar
+                    sx={{ width: 20, height: 20 }}
+                    src={post.profile_pic}
+                  />
                 ) : (
-                  <button
-                    style={{
-                      padding: 5,
-                      borderRadius: 50,
-                      color: "white",
-                      backgroundColor: "#1d1d1d",
-                      border: "1px solid ",
-                      cursor: "pointer",
-                      height: 30,
-                    }}
-                    type="submit">
-                    Follow
-                  </button>
+                  <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+                    <span style={{ fontSize: 10 }}>
+                      {post.username}
+                      {/* {post.user.username.charAt(0).toUpperCase()} */}
+                    </span>
+                  </Avatar>
                 )}
+                <div
+                  key={post.id}
+                  style={{
+                    paddingLeft: 8,
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}>
+                  <div>
+                    <p
+                      style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        window.location.replace(`/profile/${post.id}`)
+                      }>
+                      {post.username}
+                    </p>
+                    <p style={{ color: "grey" }}>{post.email}</p>
+                  </div>
+                  {post.isfollow ? (
+                    <button
+                      style={{
+                        padding: 5,
+                        borderRadius: 50,
+                        color: "gray",
+                        backgroundColor: "#1d1d1d",
+                        border: "1px solid gray",
+                        cursor: "pointer",
+                        height: 30,
+                      }}
+                      type="submit">
+                      Following
+                    </button>
+                  ) : (
+                    <button
+                      style={{
+                        padding: 5,
+                        borderRadius: 50,
+                        color: "white",
+                        backgroundColor: "#1d1d1d",
+                        border: "1px solid ",
+                        cursor: "pointer",
+                        height: 30,
+                      }}
+                      type="submit">
+                      Follow
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </Container>
 

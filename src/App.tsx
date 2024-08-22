@@ -9,13 +9,14 @@ function App() {
   const { setUser } = useStore();
   async function checkAuth() {
     const token = localStorage.getItem("token");
+    console.log(token)
 
     if (!token) {
       return null;
     }
 
     try {
-      const response = await authAsync.checkAuth(token);
+      const response = await authAsync.checkAuth();
       console.log(response);
       setUser(response.data);
       setAuthToken(token);

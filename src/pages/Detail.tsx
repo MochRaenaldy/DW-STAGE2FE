@@ -6,12 +6,18 @@ import {
   dummyRepliesContent,
   dummyUserList,
 } from "../utils/dummyData";
-import { Avatar, Checkbox } from "@mui/material";
+import { Avatar, Button, Checkbox } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { getPostById } from "../libs/api/call/home";
+import { useEffect, useState } from "react";
+import { addReply, getReplyByPostId } from "../libs/api/call/reply";
+import CustomInput from "../components/common/Input";
 
 const Detail = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const [dataPost, setDataPost] = useState<any>({});
+  const [input, setInput] = useState<string>("");
 
   //  const newUserFilter = (id: any) => {
   //       return dummyUserList.filter((user) => user.userId === id)
@@ -25,7 +31,37 @@ const Detail = () => {
     (replies) => replies.contentReplies.contentId === Number(params.id)
   );
 
-  console.log(dummyreplies);
+  const fetchPost = async () => {
+    const res = await getPostById(String(params.id));
+    console.log(res);
+    if (res?.status === 200) {
+      setDataPost(res?.data);
+      fetchReplies();
+    } else {
+      setDataPost({});
+    }
+  };
+
+  const fetchReplies = async () => {
+    const res = await getReplyByPostId(String(params.id));
+    console.log(res);
+  };
+
+  const addReplies = async () => {
+    const body = {
+      ...dataPost,
+      comments: [
+        {
+          comment: input,
+        },
+      ],
+    };
+    const res = await addReply(String(params.id), body);
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, []);
 
   return (
     <div>
@@ -40,32 +76,49 @@ const Detail = () => {
       </div>
       <div style={{ marginTop: "10px" }}>
         <div style={{ borderBottom: "1px solid gray" }}>
-          {dummycontent.map((content) => (
-            <div key={content.content.id}>
-              <div style={{ display: "flex" }}>
-                <Avatar src={content.user.image} />
-                <div style={{marginLeft:"10px"}}>
-                  <p>{content.user.username}</p>
-                  <p style={{color:"gray"}}>{content.user.email}</p>
-                </div>
-              </div>
-              <p> {content.content.textContent}</p>
-              <div style={{ color: "gray" }}>{content.content.time}</div>
-              <div style={{ display: "flex", marginRight: "10px" }}>
-                <Checkbox
-                  icon={<FavoriteBorder />}
-                  checkedIcon={<Favorite sx={{ color: "pink" }} />}
-                  defaultChecked={content.content.isLike}
-                  sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
+          <div key={dataPost?.id}>
+            <div style={{ display: "flex" }}>
+              {dataPost?.author?.profile_pic ? (
+                <Avatar
+                  sx={{ width: 40, height: 40 }}
+                  src={dataPost.author.profile_pic}
                 />
-                <div style={{ paddingRight: "10px" }}>
-                  {content.content.like}
-                </div>
-                <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />
-                <div>{content.content.replies}</div>
+              ) : (
+                <Avatar sx={{ bgcolor: "yellow", width: 40, height: 40 }}>
+                  <span style={{ fontSize: 10, display: "flex" }}>
+                    {/* {dataPost.author.username} */}
+                    {dataPost?.author?.username.charAt(0).toUpperCase()}
+                  </span>
+                </Avatar>
+              )}
+              <div style={{ marginLeft: "10px" }}>
+                <p>{dataPost?.author?.username}</p>
+                <p style={{ color: "gray" }}>{dataPost?.author?.email}</p>
               </div>
             </div>
-          ))}
+            <p> {dataPost?.content}</p>
+            <div style={{ color: "gray" }}>{dataPost?.createdAt}</div>
+            <div style={{ display: "flex", marginRight: "10px" }}>
+              <Checkbox
+                icon={<FavoriteBorder />}
+                checkedIcon={<Favorite sx={{ color: "pink" }} />}
+                defaultChecked={dataPost?.isLike}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
+              />
+              <div style={{ paddingRight: "10px" }}>{dataPost?.like || 0}</div>
+              <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />
+              <div>{dataPost?.replies || 0}</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <CustomInput
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Replies"
+          />
+          <Button onClick={addReplies}>Send</Button>
         </div>
 
         <div style={{ borderBottom: "1px solid gray" }}>

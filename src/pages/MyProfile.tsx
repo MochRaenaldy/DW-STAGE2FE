@@ -1,10 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { Avatar, Box, Container, Typography } from "@mui/material";
+import { Avatar, Box, Checkbox, Container, Typography } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import EditProfile from "../components/editProfile";
 import { useEffect, useState } from "react";
 import { getUserById } from "../libs/api/call/user";
 import useStore from "../stores/hooks";
+import { getAllPostByUserId } from "../libs/api/call/home";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 
 export interface IProfile {
   id: number;
@@ -21,42 +24,35 @@ export interface IProfile {
   followers: number;
 }
 
-const defaultData = {
-  id: 0,
-  email: "",
-  username: "",
-  fullName: "",
-  password: "",
-  bio: "",
-  profile_pic: "",
-  createdAt: "",
-  updatedAt: "",
-  isFollow: false,
-  followers: 0,
-  following: 0,
-};
-
 const Profile = () => {
   const navigate = useNavigate();
   const { user } = useStore();
   // const params = useParams();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [dataPost, setDataPost] = useState([])
+  const [buttonActive, setButtonActive] = useState<"allpost" | "media">("allpost")
   // const [dataUser, setDataUser] = useState<IProfile>(defaultData);
   // console.log(typeof params.id);
 
-  // const fetchingData = async () => {
-  //   const res = await getUserById(params.id);
-  //   console.log(res);
-  //   if (res && res?.status === 200) {
-  //     setDataUser(res?.data);
-  //   } else {
-  //     setDataUser(defaultData);
-  //   }
-  // };
+  console.log(user)
 
-  // useEffect(() => {
-  //   fetchingData();
-  // }, []);
+   const fetchingAllPost = async () => {
+     const res = await getAllPostByUserId(String(user?.id));
+    //  console.log(res);
+     if (res && res?.status === 200) {
+       setDataPost(res?.data);
+     } else {
+       setDataPost([]);
+     }
+   };
+
+   useEffect(() => {
+     if (buttonActive === "allpost") {
+       fetchingAllPost();
+     } else {
+       fetchingAllPost(); //ini buat mediaa
+     }
+   }, [buttonActive]);
 
   return (
     <div>
@@ -142,6 +138,85 @@ const Profile = () => {
       {openModal && (
         <EditProfile open={openModal} onClose={() => setOpenModal(false)} />
       )}
+
+      {dataPost.map((post: any) => (
+        <div
+          style={{
+            display: "flex",
+            borderBottom: "1px solid gray",
+            padding: " 10px",
+          }}>
+          {post?.author?.profile_pic ? (
+            <Avatar
+              sx={{ width: 20, height: 20 }}
+              src={post.author.profile_pic}
+            />
+          ) : (
+            <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+              <span style={{ fontSize: 10, display: "flex" }}>
+                {post.author.username}
+                {/* {post.user.username.charAt(0).toUpperCase()} */}
+              </span>
+            </Avatar>
+          )}
+          <div
+            key={post.id}
+            style={{
+              cursor: "pointer",
+              paddingBottom: 10,
+              paddingLeft: 8,
+            }}>
+            <div style={{ display: "flex" }}>
+              <h3
+                onClick={() => {
+                  navigate("/profile/" + post.author.id);
+                }}
+                style={{
+                  cursor: "pointer",
+                  marginBottom: 4,
+                  marginRight: "10px",
+                }}>
+                {post.author.username}
+              </h3>
+              <p style={{ color: "gray" }}> {post.author.email || ""}</p>
+            </div>
+
+            <p
+              onClick={() => {
+                navigate("/detail/" + post.id);
+              }}
+              style={{ cursor: "pointer" }}>
+              {post.content}{" "}
+            </p>
+            <div style={{ display: "flex", gap: 16 }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Checkbox
+                  icon={<FavoriteBorder />}
+                  checkedIcon={<Favorite sx={{ color: "pink" }} />}
+                  defaultChecked={post.isLike ? true : false}
+                  sx={{
+                    "& .MuiSvgIcon-root": { fontSize: 20 },
+                    padding: 0,
+                  }}
+                />
+                <span style={{ color: "gray", paddingLeft: 6 }}>
+                  {post.like || 0}
+                </span>{" "}
+              </div>
+              <div
+                style={{ display: "flex", alignItems: "center" }}
+                onClick={() => {
+                  navigate("/Replies");
+                }}>
+                <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
+                <span style={{ color: "gray", paddingLeft: 6 }}>
+                  {post.replies || 0}
+                </span>{" "}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
