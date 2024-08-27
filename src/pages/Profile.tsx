@@ -16,6 +16,7 @@ import { getUserById } from "../libs/api/call/user";
 import { getAllPostByUserId } from "../libs/api/call/home";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+import Media from "./Media"
 
 export interface IProfile {
   id: number;
@@ -68,6 +69,9 @@ const Profile = () => {
       setDataUser(defaultData);
     }
   };
+    useEffect(() => {
+      fetchingData();
+    }, []);
 
   const fetchingAllPost = async () => {
     const res = await getAllPostByUserId(params.id);
@@ -87,9 +91,7 @@ const Profile = () => {
       }
     }, [buttonActive]);
 
-  useEffect(() => {
-    fetchingData();
-  }, []);
+
 
   return (
     <div key={dataUser?.id}>
@@ -331,7 +333,9 @@ const Profile = () => {
             ))}
           </div>
         ) : (
-          <div>Ini Media</div>
+          <div>
+            <Media />
+          </div>
         )}
       </Box>
     </div>

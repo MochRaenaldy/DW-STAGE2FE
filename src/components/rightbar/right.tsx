@@ -11,14 +11,45 @@ import {
   getUserByUsername,
 } from "../../libs/api/call/user";
 import { IUserList } from "../../types/store";
+import { DoorBack } from "@mui/icons-material";
+import { api } from "../../libs/api";
 
 const Rightbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useStore();
   const params = useParams();
+  const userId = user.id;
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [isFollow, setisFollow] = useState(false);
+  const [datauserbaru, setDatauserbaru] = useState<IUserList[]>();
+
+  const followFunc = async () => {
+    const res = await api.post(`/follow/${userId}`);
+    if (res.data) {
+      setisFollow(true);
+    }
+  };
+
+  const unfollow = async () => {
+    const res = await api.delete(`follow/${userId}`);
+    if (res.data) {
+      setisFollow(false);
+    }
+  };
+
+  useEffect (() => {
+    const getuser = async (userId :number) => {
+      try {
+        const res = await api.get(`/users/userlogin/${userId}`);
+        setDatauserbaru(res.data);
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getuser(userId);
+  })
 
   const fetchingData = async () => {
     const res = await findAll();
@@ -143,8 +174,8 @@ const Rightbar = () => {
         </div>
 
         <div>
-          {dataUser &&
-            dataUser?.map((post) => (
+          {datauserbaru &&
+            datauserbaru?.map((post) => (
               <div
                 style={{
                   display: "flex",

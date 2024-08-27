@@ -6,18 +6,23 @@ import {
   dummyRepliesContent,
   dummyUserList,
 } from "../utils/dummyData";
-import { Avatar, Button, Checkbox } from "@mui/material";
+import { Avatar, Button, Checkbox, Input } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import { getPostById } from "../libs/api/call/home";
+import { createPost, getPostById } from "../libs/api/call/home";
 import { useEffect, useState } from "react";
 import { addReply, getReplyByPostId } from "../libs/api/call/reply";
 import CustomInput from "../components/common/Input";
+import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
+import { Ipostform, IPostModel } from "../types/post";
 
 const Detail = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [dataPost, setDataPost] = useState<any>({});
   const [input, setInput] = useState<string>("");
+  const [dataReply, setDataReply] = useState<IPostModel[]>([]);
+
+  console.log(dataReply);
 
   //  const newUserFilter = (id: any) => {
   //       return dummyUserList.filter((user) => user.userId === id)
@@ -36,32 +41,54 @@ const Detail = () => {
     console.log(res);
     if (res?.status === 200) {
       setDataPost(res?.data);
-      fetchReplies();
     } else {
       setDataPost({});
     }
+  };
+  const addReplies = async (body: Ipostform) => {
+    const res = await addReply(String(params.id), body);
+    console.log(res);
   };
 
   const fetchReplies = async () => {
     const res = await getReplyByPostId(String(params.id));
     console.log(res);
+    if (res?.status === 200) {
+      setDataReply(res?.data);
+    } else {
+      setDataReply([]);
+    }
   };
 
-  const addReplies = async () => {
+  const handleSendPost = async () => {
     const body = {
-      ...dataPost,
-      comments: [
-        {
-          comment: input,
-        },
-      ],
+      content: input,
     };
-    const res = await addReply(String(params.id), body);
+    const response = await addReplies(body);
+    console.log(response, "casca");
+    // if (response && response?.status === 200) {
+    // setMessage("Success Create Postingan");
+    // setSuccessPost(true);
+    // setOpenAlert(true);
+    fetchPost();
+    fetchReplies();
+    setInput("");
+    // } else {
+    // setMessage("Failed Create Postingan");
+    // setSuccessPost(false);
+    // setOpenAlert(true);
+    //   fetchPost();
+    //   fetchReplies();
+    //   setInput("");
+    // }
   };
 
-  useEffect(() => {
-    fetchPost();
-  }, []);
+  {
+    useEffect(() => {
+      fetchPost();
+      fetchReplies();
+    }, []);
+  }
 
   return (
     <div>
@@ -113,37 +140,44 @@ const Detail = () => {
         </div>
 
         <div>
+          <div style={{ fontSize: 20, marginLeft: 5 }}>Replies</div>
           <CustomInput
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Replies"
           />
-          <Button onClick={addReplies}>Send</Button>
+          <Button onClick={handleSendPost}>Send</Button>
         </div>
 
-        <div style={{ borderBottom: "1px solid gray" }}>
-          {dummyreplies.map((replies) => (
+        <div
+          style={{
+            borderBottom: "1px solid gray",
+          }}>
+          {dataReply.map((replies) => (
             <div>
-              <div key={replies.contentReplies.contentId}>
-                <div style={{ display: "flex" }}>
-                  <Avatar src={replies.user.image} />
-                  <p>{replies.user.username}</p>
+              <div key={replies.author.id}>
+                <div
+                  style={{
+                    display: "flex",
+                    borderTop: "1px solid gray",
+                    padding: 4,
+                  }}>
+                  <Avatar src={replies.author.profil_pic} />
+                  <p>{replies.author.username}</p>
                 </div>
-                <p>{replies.contentReplies.textReplies}</p>
+                <p>{replies.content}</p>
               </div>
               <div style={{ display: "flex", marginRight: "10px" }}>
                 <Checkbox
                   icon={<FavoriteBorder />}
                   checkedIcon={<Favorite sx={{ color: "pink" }} />}
-                  defaultChecked={replies.contentReplies.isLike}
                   sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
                 />
-                <div style={{ paddingRight: "10px" }}>
-                  {replies.contentReplies.like}
-                  {replies.contentReplies.time}
-                </div>
-                <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />
-                <div>{replies.contentReplies.replies}</div>
+                {replies.image || 0}
+                <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
+                <span style={{ color: "gray", paddingLeft: 6 }}>
+                  {replies.image || 0}
+                </span>{" "}
               </div>
             </div>
           ))}
@@ -154,3 +188,56 @@ const Detail = () => {
 };
 
 export default Detail;
+
+//  <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           borderBottom: "1px solid  gray",
+//           paddingBottom: 10,
+//           width: "100%",
+//         }}>
+//         <div style={{ width: "70%" }}>
+//           <Avatar sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
+//             <span style={{ fontSize: 10, display: "flex" }}>
+//               {dataPost.username}
+//               {/* {user.username.charAt(0).toUpperCase()} */}
+//             </span>
+//           </Avatar>
+
+//           <Input
+//             value={input}
+//             onChange={(e) => setInput(e.target.value)}
+//             placeholder="What is Happening ?"
+//             style={{ marginLeft: 20, width: "90%", border: "none" }}
+//           />
+//         </div>
+//         <div
+//           style={{
+//             width: "30%",
+//             display: "flex",
+//             justifyContent: "flex-end",
+//             paddingRight: "5px",
+//           }}>
+
+//             <AddPhotoAlternateOutlinedIcon
+//               sx={{
+//                 color: "green",
+//                 height: "60px",
+//                 cursor: "pointer",
+//                 marginRight: "10px",
+//               }}
+//             />
+//           <button
+//             style={{
+//               backgroundColor: "green",
+//               marginTop: "16px",
+//               width: "50px",
+//               height: "30px",
+//               borderRadius: 20,
+//               cursor: "pointer",
+//             }}
+//             onClick={handleSendPost}>
+//             Post
+//           </button>
+//         </div>

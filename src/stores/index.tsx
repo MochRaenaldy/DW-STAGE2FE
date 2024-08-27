@@ -17,6 +17,7 @@ export const StoreProvider: React.FC<StoreProps> = ({ children }) => {
   //    const decrement = () => setCount(count - 1);
 
   const [user, setUserState] = useState<IUser>({
+    id: 0,
     email: "",
     fullName: "",
     username: "",
@@ -31,6 +32,7 @@ export const StoreProvider: React.FC<StoreProps> = ({ children }) => {
 
   const clearUser = () => {
     setUserState({
+      id: 0,
       email: "",
       fullName: "",
       username: "",

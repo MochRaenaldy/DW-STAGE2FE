@@ -15,7 +15,7 @@ import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import useStore from "../stores/hooks";
 import CustomInput from "../components/common/Input";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { api } from "../libs/api";
 import { createPost, getPost } from "../libs/api/call/home";
@@ -23,11 +23,18 @@ import { createPost, getPost } from "../libs/api/call/home";
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useStore();
+  const refImage: any = useRef(null);
   const [input, setInput] = useState("");
+  const [photo, setPhoto] = useState<any>(null);
   const [dataPost, setDataPost] = useState([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [successPost, setSuccessPost] = useState(false);
   const [message, setMessage] = useState("");
+
+  const handleChangePhoto = (e: any) => {
+    const objectUrl = URL.createObjectURL(e.target.files[0]);
+    setPhoto(objectUrl);
+  };
 
   const handleSendPost = async () => {
     const body = {
@@ -61,7 +68,7 @@ const Home = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-
+  
   return (
     <div>
       <div>
@@ -87,7 +94,7 @@ const Home = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="What is Happening ?"
-            style={{ marginLeft: 20, width: "90%", border: "none", }}
+            style={{ marginLeft: 20, width: "90%", border: "none" }}
           />
         </div>
         <div
@@ -97,15 +104,15 @@ const Home = () => {
             justifyContent: "flex-end",
             paddingRight: "5px",
           }}>
-          <AddPhotoAlternateOutlinedIcon
-            sx={{
-              color: "green",
-              height: "60px",
-              cursor: "pointer",
-              marginRight: "10px",
-            }}
-          />
-
+         
+            <AddPhotoAlternateOutlinedIcon
+              sx={{
+                color: "green",
+                height: "60px",
+                cursor: "pointer",
+                marginRight: "10px",
+              }}
+            />
           <button
             style={{
               backgroundColor: "green",
@@ -170,7 +177,7 @@ const Home = () => {
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <Checkbox
                     icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite sx={{ color: "pink" }} />}
+                    checkedIcon={<Favorite sx={{ color: "red" }} />}
                     defaultChecked={post.isLike ? true : false}
                     sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
                   />
@@ -181,7 +188,7 @@ const Home = () => {
                 <div
                   style={{ display: "flex", alignItems: "center" }}
                   onClick={() => {
-                    navigate("/Replies");
+                    navigate("/detail/" + post.id);
                   }}>
                   <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                   <span style={{ color: "gray", paddingLeft: 6 }}>
