@@ -3,8 +3,8 @@ import * as replyService from "../services/ReplyService";
 import { Request, Response } from "express";
 import errorHandler from "../utils/errorHandler";
 
-export async function findAll(req: Request, res: Response) {
-  const post = await replyService.findAll(Number(req.params.postId));
+export async function findAllInPost(req: Request, res: Response) {
+  const post = await replyService.findAllInPost(Number(req.params.postId));
   res.json(post);
 }
 
@@ -13,7 +13,7 @@ export const findById = async (req: Request, res: Response) => {
   res.json(post);
 };
 
-export const create = async (req: Request, res: Response) => {
+export const addReply = async (req: Request, res: Response) => {
   try {
     await createPostSchema.validateAsync(req.body);
 
@@ -27,9 +27,9 @@ export const create = async (req: Request, res: Response) => {
     req.body.userId = userId;
     req.body.parentId = postId;
 
-    const post = await replyService.create(req.body);
+    const post = await replyService.addReply(req.body);
     res.json({
-      message: "Post created successfully",
+      message: "Reply Post  successfully",
       data: post,
     });
   } catch (error) {

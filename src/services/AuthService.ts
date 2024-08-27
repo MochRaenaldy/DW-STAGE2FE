@@ -12,20 +12,31 @@ export const login = async (username: string, password: string) => {
       },
     });
 
+    function exclude(user: any, keys: any) {
+      return Object.fromEntries(
+        Object.entries(user).filter(([key]) => !keys.includes(key))
+      );
+    }
+
+    const existedUserWithoutPass = exclude(existedUser, ["password"]);
+
     if (!existedUser) {
       return null;
     }
 
-     const isMatch = await bcrypt.compare(password, existedUser.password);
+    const isMatch = await bcrypt.compare(password, existedUser.password);
 
-     if (!isMatch) {
-       return null;
-     }
+    if (!isMatch) {
+      return null;
+    }
 
-     const token = jwt.sign(existedUser, process.env.SECRET_KEY! || "secret", {
-       expiresIn: "1d",
-     });
-
+    const token = jwt.sign(
+      existedUserWithoutPass,
+      process.env.SECRET_KEY! || "secret",
+      {
+        expiresIn: "1d",
+      }
+    );
 
     return token;
   } catch (error) {
@@ -59,4 +70,10 @@ export const register = async (user: IUserRegister): Promise<User | string> => {
     console.log(error);
     throw error.message;
   }
+};
+
+export const checkAuth = async (id: number) => {
+  return await db.user.findFirst({
+    where: { id },
+  });
 };

@@ -2,42 +2,56 @@ import { createPostSchema } from "../libs/validations/post";
 import * as likeservice from "../services/LikeService";
 import { Request, Response } from "express";
 import errorHandler from "../utils/errorHandler";
+import { log } from "console";
 
-export const findAll = async (req: Request, res: Response) => {
-  const posts = await likeservice.findAll();
-  res.json(posts);
-};
-
-export const findById = async (req: Request, res: Response) => {
-  const post = await likeservice.findById(parseInt(req.params.id));
-  res.json(post);
-};
-
-export const create = async (req: Request, res: Response) => {
+export async function addLike(req: Request, res: Response) {
   try {
-    await createPostSchema.validateAsync(req.body);
+    console.log("Masuk Like Controller");
+    req.body.userId = res.locals.user.id;
+    req.body.postId = parseInt(req.params.postId);
+    console.log(req.body.userId);
+    console.log(req.body.postId);
 
-    console.log(req.file);
-    if (req.file) {
-      req.body.image = req.file.filename;
-    }
+    // const islike = await likeservice.findFirst(
+    //   req.body.postId,
+    //   req.body.userId
+    // );
 
-    const post = await likeservice.create(req.body);
-    res.json({
-      message: "Post created successfully",
-      data: post,
-    });
+    // if (islike) {
+    //   let liked = false;
+    //    await likeservice.unlike;
+    //   return res.json({liked})
+    // }
+    //   await likeservice.addLike;
+    //   let liked = true;
+    //   return res.json({liked})
+
+    const like = await likeservice.addLike(req.body.postId, req.body.userId);
+    res.json(like);
+
   } catch (error) {
     errorHandler(res, error as unknown as Error);
   }
-};
+}
 
-export const update = (req: Request, res: Response) => {
-  const post = likeservice.update(parseInt(req.params.id), req.body);
-  res.json(post);
-};
+// export async function checkIfLiked(req: Request, res: Response) {
+//   const like = await likeservice.checkIfLiked(
+//     Number(req.params.postId),
+//     res.locals.user.id
+//   );
+//   res.json(like);
+// }
 
-export const remove = (req: Request, res: Response) => {
-  const post = likeservice.remove(parseInt(req.params.id));
-  res.json(post);
-};
+export async function getPostLikes(req: Request, res: Response) {
+  const like = await likeservice.getAllPostLikes(Number(req.params.postId));
+  res.json(like);
+}
+
+// export function create(arg0: string, create: any) {
+//     throw new Error("Function not implemented.");
+// }
+
+// export const remove = (req: Request, res: Response) => {
+//   const post = likeservice.deleteLike(parseInt(req.params.id));
+//   res.json(post);
+// };

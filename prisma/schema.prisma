@@ -28,8 +28,8 @@ model User {
 
   posts Posts[]
   liked Like[]
-  following Follow[]
-  followers Followers[]
+  following Follow[] @relation("following")
+  followers Follow[] @relation("followers")
 }
 
 model Posts {
@@ -55,21 +55,18 @@ model PostImage {
 }
 
 model Like {
+  id    Int    @id @default(autoincrement())
   userId Int
   postId Int
   user   User  @relation(fields: [userId], references: [id])
   post   Posts @relation(fields: [postId], references: [id])
-  @@id([userId, postId])
+
 }
 
 model Follow {
-  userId Int
-  user   User  @relation(fields: [userId], references: [id])
-  @@id([userId])
-}
-
-model Followers {
-  userId Int
-  user   User  @relation(fields: [userId], references: [id])
-  @@id([userId])
+ id     Int    @id @default(autoincrement())
+ followingId Int
+ followersId Int
+ following User @relation("following",fields: [followingId], references: [id])
+ followers User @relation("followers",fields: [followersId], references: [id])
 }

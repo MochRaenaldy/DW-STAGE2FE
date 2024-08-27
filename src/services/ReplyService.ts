@@ -1,18 +1,32 @@
 import { PostModels } from "../models/PostModels";
 import db from "../libs/db";
 import { IPosts } from "../types/post";
+import { Posts } from "@prisma/client";
 
-const posts: PostModels[] = [];
 
-export async function findAll(postId: number) {
-  db.posts.findMany({
+export async function findAllInPost(postId: number) {
+  return await db.posts.findMany({
     where: { parentId: postId },
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+          profile_pic: true,
+        },
+      },
+      comments: true,
+      images: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 };
 
-export const findById = async (id: number) => {
-  return await db.posts.findFirst({
-    where: { id },
+export const findById = async (postId: number) => {
+  return await db.posts.findMany({
+    where: { parentId: postId },
     // join table
     include: {
       author: {
@@ -26,17 +40,23 @@ export const findById = async (id: number) => {
   });
 };
 
-export async function addReply(reply: IPosts) {
-  db.posts.create({
-    data: {
-      ...reply,
-      images: {
-        create: reply.images?.map((image) => ({ image: image.filename })),
-      },
-    },
-  });
-}
+export async function addReply(reply: Posts) {
+console.log(addReply);
 
+const newPost = await db.posts.create({data:reply})
+
+return newPost
+
+
+  // db.posts.create({
+  //   data: {
+  //     ...reply,
+  //     images: {
+  //       create: reply.images?.map((image) => ({ image: image.filename })),
+  //     },
+  //   },
+  // });
+}
 
 export function create(body: any) {
   throw new Error("Function not implemented.");

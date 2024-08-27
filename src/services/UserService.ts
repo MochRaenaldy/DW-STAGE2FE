@@ -7,6 +7,16 @@ export const findAll = async () => {
   return await db.user.findMany({});
 };
 
+export const findbyuserlogin = async (userId :number) => {
+return await db.user.findMany({
+  where: {
+    NOT: {
+      id : userId,
+    },
+  }
+})
+};
+
 export const findById = async (id: number) => {
   return await db.user.findFirst({
     where: { id },
@@ -24,14 +34,14 @@ export const findByUsername = async (username: string) => {
   });
 };
 
-export const update = async (id: number, post: IUser) => {
-  console.log(post);
-  const updatedPost = await db.user.update({
-    data: post,
+export const update = async (id: number, update: IUser) => {
+  console.log(update);
+  const updatedUser = await db.user.update({
+    data: update,
     where: { id },
   });
 
-  return updatedPost;
+  return updatedUser;
 };
 
 export const remove = async (id: number) => {

@@ -11,7 +11,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
   if (!token) {
     return res.status(401).json({ message: "Unauthorized", statusCode: 401 });
   }
-  // console.log(token);
+    // console.log(token);
 
   // const payload = jwt.verify(token, process.env.SECRET_KEY || "secret");
 

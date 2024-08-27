@@ -8,6 +8,11 @@ export const findAll = async (req: Request, res: Response) => {
   res.json(user);
 };
 
+export const findbyuserlogin = async (req: Request, res: Response) => {
+  const user = await userservice.findbyuserlogin (parseInt(req.params.userId));
+  res.json(user);
+}
+
 export const findById = async (req: Request, res: Response) => {
   const user = await userservice.findById(parseInt(req.params.id));
   res.json(user);

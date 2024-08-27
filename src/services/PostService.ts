@@ -7,6 +7,9 @@ const posts: PostModels[] = [];
 
 export const findAll = async () => {
   return await db.posts.findMany({
+    where : {
+      parentId:null 
+    },
     // join table
     include: {
       author: {
@@ -19,12 +22,34 @@ export const findAll = async () => {
       comments: true,
       images: true,
     },
+    orderBy: {
+      createdAt:'desc',
+    }
   });
 };
 
 export const findById = async (id: number) => {
   return await db.posts.findFirst({
-    where: { id },
+    where: { id, parentId: null },
+    // join table
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+          profile_pic: true,
+          email: true,
+        },
+      },
+      comments: true,
+      images: true,
+    },
+  });
+};
+
+export const findByUserId = async (userId: number) => {
+  return await db.posts.findMany({
+    where: { userId, parentId: null },
     // join table
     include: {
       author: {

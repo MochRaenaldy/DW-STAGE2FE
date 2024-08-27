@@ -4,15 +4,15 @@ import authorization from "../middlewares/authorization";
 import upload from "../middlewares/fileUpload";
 const repliesRoute = Router();
 
-repliesRoute.get("/:postId", replyController.findAll);
+repliesRoute.get("/byPost/:postId", replyController.findAllInPost);
 
 repliesRoute.get("/:id", replyController.findById);
 
 repliesRoute.post(
-  "/:postId",
+  "/create/:postId",
   authorization,
   upload.single("image"),
-  replyController.create
+  replyController.addReply
 );
 
 // repliesRoute.put("/:id", replyController.update);

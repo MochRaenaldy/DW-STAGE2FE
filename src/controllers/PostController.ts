@@ -13,6 +13,12 @@ export const findById = async (req: Request, res: Response) => {
   res.json(post);
 };
 
+export const findByUserId = async (req: Request, res: Response) => {
+  const posts = await postService.findByUserId(parseInt(req.params.id));
+  res.json(posts);
+};
+
+
 export const create = async (req: Request, res: Response) => {
   try {
     await createPostSchema.validateAsync(req.body);

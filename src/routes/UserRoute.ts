@@ -10,7 +10,9 @@ userRoute.get("/:id", userController.findById);
 
 userRoute.get("/search/:username", userController.findByUsername);
 
-userRoute.put("/:id", userController.update);
+userRoute.put("/update/:id", upload.single("image"), userController.update);
+
+userRoute.get("/userlogin/:userId", userController.findbyuserlogin);
 
 // userRoute.delete("/:id", userController.remove);
 

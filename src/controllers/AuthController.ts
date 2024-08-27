@@ -42,15 +42,19 @@ export const checkAuth = async (req: Request, res: Response) => {
   try {
     const user = res.locals.user;
 
+    const userProfile = await authService.checkAuth(user.id);
+
+    function exclude(user: any, keys: any) {
+      return Object.fromEntries(
+        Object.entries(user).filter(([key]) => !keys.includes(key))
+      );
+    }
+
+    const existedUserWithoutPass = exclude(userProfile, ["password"]);
+
     res.json({
       message: "User authenticated successfully",
-      data: {
-        fullName: user.fullName,
-        username: user.username,
-        profile_pic: user.profile_pic,
-        email: user.email,
-        id: user.id,
-      },
+      data: existedUserWithoutPass,
     });
   } catch (error) {
     console.log(error, "error check auth");
