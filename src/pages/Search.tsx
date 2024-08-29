@@ -11,6 +11,7 @@ import { getUserByUsername } from "../libs/api/call/user";
 import { IProfile, IUserList } from "../types/store";
 import { api } from "../libs/api";
 import useStore from "../stores/hooks";
+import baseUrl from "../utils/baseUrl";
 
 const SearchPage = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ const SearchPage = () => {
                 {user.profile_pic ? (
                   <Avatar
                     sx={{ width: 20, height: 20 }}
-                    src={user.profile_pic}
+                    src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
                   />
                 ) : (
                   <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>

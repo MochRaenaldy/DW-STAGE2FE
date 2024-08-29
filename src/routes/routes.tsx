@@ -14,6 +14,8 @@ import MyProfile from "../pages/MyProfile";
 import Follows from "../pages/Follows";
 import Replies from "../pages/Replies";
 import Search from "../pages/Search";
+import Following from "../pages/Following";
+import Followers from "../pages/Followers";
 
 const routes: RouteObject[] = [
   {
@@ -31,6 +33,16 @@ const routes: RouteObject[] = [
       {
         path: "follows",
         element: <Follows />,
+        children: [
+          {
+            path: "follow",
+            element: <Following />,
+          },
+          {
+            path: "follower",
+            element: <Followers />,
+          },
+        ],
       },
       {
         path: "Replies/:id",

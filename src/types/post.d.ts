@@ -8,6 +8,7 @@ export interface IPostModel {
   id: number;
   content: string;
   createdAt: string;
+  profile_pic?: string;
   images: [
     {
       image: string;
@@ -30,4 +31,6 @@ export interface IComment {
   createdAt: Date;
   author: IAuthor;
 }
+
+
 

@@ -21,6 +21,7 @@ import Like from "../components/Like/like";
 import { IPostModel } from "../types/post";
 import { api } from "../libs/api";
 import { IUserList } from "../types/store";
+import baseUrl from "../utils/baseUrl";
 
 export interface IProfile {
   id: number;
@@ -59,7 +60,7 @@ const Profile = () => {
    const [dataPost, setDataPost] = useState([]);
      const { user, users, getUsers } = useStore();
      const userId = user.id;
-     const baseUrl = "http://localhost:3000/uploads/";
+     const baseUrll = "http://localhost:3000/uploads/";
      const [followers, setFollowers] = useState<number>(0);
      const [follows, setFollows] = useState<number>(0);
      const [loading, setLoading] = useState<boolean>(false);
@@ -202,7 +203,7 @@ const Profile = () => {
                 height: "100px",
                 position: "absolute",
               }}
-              src={dataUser.profile_pic}
+              src={`${baseUrl.baseUrlImg}${dataUser.profile_pic}`}
             />
           ) : (
             <Avatar
@@ -272,8 +273,8 @@ const Profile = () => {
           </Typography>
 
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-            {followers || 0} <span style={{ color: "gray" }}>Following </span>{" "}
-            {follows || 0} <span style={{ color: "gray" }}>Followers</span>
+            {follows || 0} <span style={{ color: "gray" }}>Following </span>{" "}
+            {followers || 0} <span style={{ color: "gray" }}>Followers</span>
           </Typography>
         </Container>
       </Box>
@@ -374,7 +375,7 @@ const Profile = () => {
                   {post.images.length > 0 &&
                     post.images.map((image: { image: string }) => (
                       <img
-                        src={`${baseUrl}${image.image}`}
+                        src={`${baseUrll}${image.image}`}
                         alt=""
                         style={{ width: 150, padding: 10, cursor: "pointer" }}
                         key={image.image}
@@ -387,7 +388,7 @@ const Profile = () => {
                     <div
                       style={{ display: "flex", alignItems: "center" }}
                       onClick={() => {
-                        navigate("/Replies");
+                        navigate("/detail/" + post.id);
                       }}>
                       <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                       <span style={{ color: "gray", paddingLeft: 6 }}>

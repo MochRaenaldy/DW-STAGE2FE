@@ -161,11 +161,14 @@ const Home = () => {
             {post?.author?.profil_pic ? (
               <Avatar
                 sx={{ width: 20, height: 20 }}
-                src={post.author.profil_pic}
+                src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
               />
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
-                <img src={`${baseUrl.baseUrlImg}${post.author.profil_pic}`} alt="" />
+                <img
+                  src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                  alt=""
+                />
                 <span style={{ fontSize: 10, display: "flex" }}>
                   {post.author.username}
                   {/* {post.user.username.charAt(0).toUpperCase()} */}

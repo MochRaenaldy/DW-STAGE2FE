@@ -22,6 +22,7 @@ const Rightbar = () => {
   const { user ,getUsers, users} = useStore();
   const params = useParams();
   const userId = user.id;
+  const [photo, setPhoto] = useState<any>(null);
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isFollow, setisFollow] = useState(false);
@@ -147,7 +148,12 @@ const Rightbar = () => {
               position: "absolute",
             }}>
             <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
-              <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
+              <img
+                src={
+                  photo ||
+                  "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png"
+                }
+              />
               <span style={{ fontSize: 10 }}>
                 {user.username}
                 {/* {user.username.charAt(0).toUpperCase()} */}
@@ -237,7 +243,7 @@ const Rightbar = () => {
                   {post.profile_pic ? (
                     <Avatar
                       sx={{ width: 20, height: 20 }}
-                      src={post.profile_pic}
+                      src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
                     />
                   ) : (
                     <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>

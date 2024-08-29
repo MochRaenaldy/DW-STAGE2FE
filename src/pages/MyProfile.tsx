@@ -12,6 +12,7 @@ import Media from "./Media";
 import Like from "../components/Like/like";
 import { IPostModel } from "../types/post";
 import { api } from "../libs/api";
+import baseUrl from "../utils/baseUrl";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Profile = () => {
   const userId = user.id;
   const [dataPost, setDataPost] = useState([])
   const [buttonActive, setButtonActive] = useState<"allpost" | "media">("allpost")
-  const baseUrl = "http://localhost:3000/uploads/";
+  const baseUrll = "http://localhost:3000/uploads/";
   // const [dataUser, setDataUser] = useState<IProfile>(defaultData);
   // console.log(typeof params.id);
 
@@ -86,6 +87,7 @@ const Profile = () => {
             position: "relative",
           }}>
           <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
+            <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
             <span style={{ fontSize: 10 }}>
               {user.username}
               {/* {user.username.charAt(0).toUpperCase()x} */}
@@ -130,10 +132,10 @@ const Profile = () => {
         </Typography>
 
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-          <span style={{ color: "gray" }}>{followers}Follow</span>{" "}
+          <span style={{ color: "gray" }}>{follows}Follow</span>{" "}
           {
             <span style={{ color: "gray" }}>
-              {follows} Followers
+              {followers} Followers 
               {/*dataUser.followers*/}{" "}
             </span>
           }
@@ -230,7 +232,7 @@ const Profile = () => {
                   {post.images.length > 0 &&
                     post.images.map((image: { image: string }) => (
                       <img
-                        src={`${baseUrl}${image.image}`}
+                        src={`${baseUrll}${image.image}`}
                         alt=""
                         style={{ width: 150, padding: 10, cursor: "pointer" }}
                         key={image.image}
@@ -243,7 +245,7 @@ const Profile = () => {
                     <div
                       style={{ display: "flex", alignItems: "center" }}
                       onClick={() => {
-                        navigate("/Replies");
+                        navigate("/detail/" + post.id);
                       }}>
                       <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                       <span style={{ color: "gray", paddingLeft: 6 }}>
