@@ -4,8 +4,8 @@ import * as followController from "../controllers/FollowController"
 
 const followRoute = Router();
 
-followRoute.post("/:userId", authorization, followController.follow);
-followRoute.delete("/:userId", authorization, followController.unfollow);
-followRoute.post("/check/:userId", authorization, followController.checkFollow);
+followRoute.post("/", authorization, followController.follow);
+followRoute.post("/unfollow", authorization, followController.unfollow);
+followRoute.post("/check", authorization, followController.checkFollow);
 
 export default followRoute

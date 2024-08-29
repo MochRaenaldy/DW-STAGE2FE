@@ -40,27 +40,24 @@ export const findById = async (postId: number) => {
   });
 };
 
-export async function addReply(reply: Posts) {
-console.log(addReply);
+export async function addReply(post: IPosts) {
+const newPost = await db.posts.create({
+    data: {
+      ...post,
+      images: {
+        create:
+          post.images &&
+          post.images.map((image) => ({ image: image.filename })),
+      },
+    },
+  });
 
-const newPost = await db.posts.create({data:reply})
+  return newPost;
+};
 
-return newPost
-
-
-  // db.posts.create({
-  //   data: {
-  //     ...reply,
-  //     images: {
-  //       create: reply.images?.map((image) => ({ image: image.filename })),
-  //     },
-  //   },
-  // });
-}
-
-export function create(body: any) {
-  throw new Error("Function not implemented.");
-}
+// export function create(body: any) {
+//   throw new Error("Function not implemented.");
+// }
 // export const update = async (id: number, post: PostModels) => {
 //   const updatedPost = await db.posts.update({
 //     data: post,

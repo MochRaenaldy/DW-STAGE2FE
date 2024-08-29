@@ -16,10 +16,8 @@ export const findById = async (req: Request, res: Response) => {
 export const addReply = async (req: Request, res: Response) => {
   try {
     await createPostSchema.validateAsync(req.body);
-
-    console.log(req.file);
-    if (req.file) {
-      req.body.image = req.file.filename;
+    if (req.files) {
+      req.body.images = req.files;
     }
 
     const postId = parseInt(req.params.postId);

@@ -13,7 +13,14 @@ return await db.user.findMany({
     NOT: {
       id : userId,
     },
-  }
+  },
+  select : {
+      id : true,
+      username : true,
+      profile_pic : true,
+      email : true,
+      fullName : true,
+    },
 })
 };
 
@@ -24,7 +31,6 @@ export const findById = async (id: number) => {
 };
 
 export const findByUsername = async (username: string) => {
-  console.log(username);
   return await db.user.findMany({
     where: {
       username: {
@@ -39,10 +45,30 @@ export const update = async (id: number, update: IUser) => {
   const updatedUser = await db.user.update({
     data: update,
     where: { id },
+    select: {
+      id: true,
+      username: true,
+      profile_pic: true,
+      email: true,
+      fullName: true,
+      bio : true,
+    }
   });
 
   return updatedUser;
 };
+
+
+export const countFollow = async (id: number) => {
+  const res = await db.user.findUnique({
+    where: { id },
+    include :{
+      following : true,
+      followers : true,
+    },
+});
+return res
+}
 
 export const remove = async (id: number) => {
   await db.user.delete({ where: { id } });

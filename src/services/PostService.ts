@@ -20,7 +20,11 @@ export const findAll = async () => {
         },
       },
       comments: true,
-      images: true,
+      images: {
+        select: {
+          image: true,
+        },
+      },
     },
     orderBy: {
       createdAt:'desc',
@@ -39,10 +43,30 @@ export const findById = async (id: number) => {
           username: true,
           profile_pic: true,
           email: true,
+          fullName: true,
         },
       },
-      comments: true,
-      images: true,
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              username: true,
+              profile_pic: true,
+              email: true,
+              fullName: true,
+            },
+          }
+        },
+      },
+      images: {
+        select: {
+          image: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt:'desc',
     },
   });
 };
@@ -60,9 +84,18 @@ export const findByUserId = async (userId: number) => {
         },
       },
       comments: true,
-      images: true,
+      images: {
+        select: {
+          image: true,
+
+        }
+      },
     },
-  });
+    orderBy: {
+      createdAt:'desc',
+    },
+  }
+);
 };
 
 export const create = async (post: IPosts) => {

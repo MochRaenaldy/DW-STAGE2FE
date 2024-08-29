@@ -1,6 +1,6 @@
 import { createPostSchema } from "../libs/validations/post";
 import * as userservice from "../services/UserService";
-import { Request, Response } from "express";
+import { Request, response, Response } from "express";
 import errorHandler from "../utils/errorHandler";
 
 export const findAll = async (req: Request, res: Response) => {
@@ -25,6 +25,9 @@ export async function findByUsername(req: Request, res: Response) {
 }
 
 export const update = async (req: Request, res: Response) => {
+  if (req.file) {
+    req.body.profile_pic = req.file.filename;
+  }
   const user = await userservice.update(parseInt(req.params.id), req.body);
   console.log(user);
   res.json({
@@ -32,6 +35,23 @@ export const update = async (req: Request, res: Response) => {
     data: user,
   });
 };
+
+export const countFoll = async (req: Request, res: Response) => {
+  try {
+    const count = await userservice.countFollow(parseInt(req.params.id));
+    if (!count)  {
+      return res.send({
+        response: "fail",
+        message : "data not found"
+      })
+    }
+    res.json({followers: count.followers.length, following: count.following.length})
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 
 // export const remove = (req: Request, res: Response) => {
 //   const user = userservice.remove(parseInt(req.params.id));

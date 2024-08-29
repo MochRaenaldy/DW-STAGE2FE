@@ -1,83 +1,66 @@
-import { exist } from "joi";
 import db from "../libs/db";
+import { Ilike } from "../types/like";
 
-export async function addLike(postId: number, userId: number) {
-  console.log("Masuk Like Service");
-  // const check = await checkIfLiked(postId, userId);
-  // if (check) return await deleteLike(postId, userId);
+export const createLike = async (body :Ilike) => {
+  const checkLike = await db.like.findFirst({
+    where : {
+      postId : body.postId,
+      userId : body.userId,
+  },
+  });
+if (checkLike) {
+  return "user already liked this post";
+} 
+const Like = await db.like.create({
+  data : body,
+});
 
-  // const like = await db.like.create({
-  const islike = await db.like.findFirst({
-    where: {
-      AND: [{ postId: postId }, { userId: userId }],
+return Like;
+} 
+
+export const deleteLike = async (body :Ilike )  => {
+  const existingLike = await db.like.findFirst({
+    where : { 
+      postId : body.postId,
+      userId : body.userId,
+    },
+  });
+  if (!existingLike) {
+    return "user has not liked this post";
+  }
+
+  await db.like.delete({
+    where : {
+      id : existingLike.id,
+    },
+  });
+  return "like deleted";
+}
+
+export const countLike = async (postId :number) => {
+  const res = await db.posts.findUnique({
+    where : {
+      id : postId,
     },
     include: {
-      post: true,
-      user: true,
+      likes: true,
     },
   });
-
-  if (!islike) {
-    const handlelike = await db.like.create({
-      data: { postId: postId, userId: userId },
-    });
-    return handlelike;
-  }
-  const handlelike = await db.like.delete({
-    where: {
-      id: islike.id,
-    },
-  });
-  return handlelike;
+  return res;
 }
 
-// export const findFirst = async (postId: number, userId: number) => {
-//   return await db.like.findFirst({
-//     where: {
-//       postId,
-//       userId,
-//     },
-//   });
-// };
-
-//  export const unlike = async (postId: number, userId: number) => {
-//    const deletedLike = await db.like.findFirst({
-//      where: {
-//        postId,
-//        userId,
-//      },
-//    });
-//    return await db.like.delete({
-//      where: {
-//        id: deletedLike?.id,
-//      },
-//    });
-//  }
-  
-// export async function deleteLike(postId: number, userId: number) {
-//   return await db.like.delete({
-//     where: {
-//       postId_userId: { postId, userId },
-//     },
-//   });
-// }
-
-export async function getAllPostLikes(postId: number) {
-  return await db.like.findMany({
+export const checkLike = async (body :Ilike) => {
+  const existingLike = await db.like.findFirst({
     where: {
-      postId,
+      postId: body.postId,
+      userId: body.userId,
     },
   });
+
+if (existingLike) {
+  return true;
+} else {
+  return false;
 }
 
-// export async function checkIfLiked(postId: number, userId: number) {
-//   const likesList = await getAllPostLikes(postId); //ambil semua like dari suatu post
-//   let like = false;
-//   likesList.forEach((e) => {
-//     if (e.userId == userId) {
-//       //cek satu satu klo udh di like atau blm
-//       like = true;
-//     }
-//   });
-//   return like;
-// }
+}

@@ -11,7 +11,7 @@ repliesRoute.get("/:id", replyController.findById);
 repliesRoute.post(
   "/create/:postId",
   authorization,
-  upload.single("image"),
+  upload.array("images"),
   replyController.addReply
 );
 

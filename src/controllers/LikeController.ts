@@ -1,57 +1,51 @@
-import { createPostSchema } from "../libs/validations/post";
 import * as likeservice from "../services/LikeService";
 import { Request, Response } from "express";
 import errorHandler from "../utils/errorHandler";
-import { log } from "console";
 
-export async function addLike(req: Request, res: Response) {
+export const  Like = async (req: Request, res: Response) => {
+  const postId = parseInt(req.params.postId, 10);
+  
+  const {userId} = req.body
   try {
-    console.log("Masuk Like Controller");
-    req.body.userId = res.locals.user.id;
-    req.body.postId = parseInt(req.params.postId);
-    console.log(req.body.userId);
-    console.log(req.body.postId);
-
-    // const islike = await likeservice.findFirst(
-    //   req.body.postId,
-    //   req.body.userId
-    // );
-
-    // if (islike) {
-    //   let liked = false;
-    //    await likeservice.unlike;
-    //   return res.json({liked})
-    // }
-    //   await likeservice.addLike;
-    //   let liked = true;
-    //   return res.json({liked})
-
-    const like = await likeservice.addLike(req.body.postId, req.body.userId);
-    res.json(like);
-
+    const Like = await likeservice.createLike({postId, userId});
+    res.json(Like);
   } catch (error) {
     errorHandler(res, error as unknown as Error);
   }
 }
 
-// export async function checkIfLiked(req: Request, res: Response) {
-//   const like = await likeservice.checkIfLiked(
-//     Number(req.params.postId),
-//     res.locals.user.id
-//   );
-//   res.json(like);
-// }
-
-export async function getPostLikes(req: Request, res: Response) {
-  const like = await likeservice.getAllPostLikes(Number(req.params.postId));
-  res.json(like);
+export const unlike = async (req: Request, res: Response) => {
+  const postId = parseInt(req.params.postId, 10);
+  const {userId} = req.body
+  try {
+    const unlike = await likeservice.deleteLike({postId, userId});
+    res.json(unlike);
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
 }
 
-// export function create(arg0: string, create: any) {
-//     throw new Error("Function not implemented.");
-// }
+export const countLike = async (req: Request, res: Response) => {
+  try {
+    const post = await likeservice.countLike(parseInt(req.params.postId));
+    const likescount = post === null? 0 : post.likes.length;
+    res.json({likes: likescount});
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
+}
 
-// export const remove = (req: Request, res: Response) => {
-//   const post = likeservice.deleteLike(parseInt(req.params.id));
-//   res.json(post);
-// };
+export const checkLike = async (req: Request, res: Response) => {
+  const {userId} = req.body;
+  const postId = parseInt(req.params.postId, 10);
+  try {
+    const check = await likeservice.checkLike({postId, userId});
+    if (check) {
+      res.json({liked: true});
+    } else {
+      res.json({liked: false});
+    }
+  } catch (error) {
+    errorHandler(res, error as unknown as Error);
+  }
+}
