@@ -1,7 +1,9 @@
+import React from 'react'
+import Detail from './Detail'
 
 const Replies = () => {
   return (
-    <div>Replies</div>
+    <Detail />
   )
 }
 

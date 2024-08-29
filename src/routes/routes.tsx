@@ -33,7 +33,7 @@ const routes: RouteObject[] = [
         element: <Follows />,
       },
       {
-        path: "Replies",
+        path: "Replies/:id",
         element: <Replies />,
       },
       {

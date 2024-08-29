@@ -17,6 +17,10 @@ import { getAllPostByUserId } from "../libs/api/call/home";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import Media from "./Media"
+import Like from "../components/Like/like";
+import { IPostModel } from "../types/post";
+import { api } from "../libs/api";
+import { IUserList } from "../types/store";
 
 export interface IProfile {
   id: number;
@@ -51,15 +55,80 @@ const defaultData = {
 const Profile = () => {
   const navigate = useNavigate();
   const params = useParams();
-  const { user } = useStore();
   const [dataUser, setDataUser] = useState<IProfile>(defaultData);
    const [dataPost, setDataPost] = useState([]);
+     const { user, users, getUsers } = useStore();
+     const userId = user.id;
+     const baseUrl = "http://localhost:3000/uploads/";
+     const [followers, setFollowers] = useState<number>(0);
+     const [follows, setFollows] = useState<number>(0);
+     const [loading, setLoading] = useState<boolean>(false);
+     const [statusFollow, setStatusFollow] = useState<Map<number, boolean>>(
+       new Map()
+     );
   const [buttonActive, setButtonActive] = useState<"allpost" | "media">(
     "allpost"
   );
-
-  console.log(typeof params.id);
   // const newDummy = dummyUserList.filter((data) => data.userId == Number(params.id))
+  const countFollow = async (userId: number) => {
+    const res = await api.get(`/users/follows/${userId}`);
+    setFollowers(res.data.followers);
+    setFollows(res.data.following);
+  };
+
+  useEffect(() => {
+    countFollow(userId);
+  }, [userId]);
+
+
+   const followFunc = async (followersId: number, followingId: number) => {
+     try {
+       const res = await api.post("/follow", { followersId, followingId });
+       if (res.data) {
+         setStatusFollow((prev) => new Map(prev).set(followingId, true));
+       }
+     } catch (error) {
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   const unfollow = async (followersId: number, followingId: number) => {
+     setLoading(true);
+     try {
+       await api.post("/follow/unfollow", { followersId, followingId });
+       setStatusFollow((prev) => new Map(prev).set(followingId, false));
+     } catch (error) {
+     } finally {
+       setLoading(false);
+     }
+   };
+
+   useEffect(() => {
+     const checkfollow = async (followersId: number, users: IUserList[]) => {
+       setLoading(true);
+       try {
+         const res = await api.post("/follow/check", { followersId, users });
+         const followMap = new Map<number, boolean>(
+           res.data.map((user: { id: number; isFollowing: boolean }) => [
+             user.id,
+             user.isFollowing,
+           ])
+         );
+         const updatedStatusFollow = new Map<number, boolean>(
+           users.map((user) => [user.id, followMap.get(user.id) || false])
+         );
+         setStatusFollow(updatedStatusFollow);
+       } catch (error) {
+         console.log(error);
+       } finally {
+         setLoading(false);
+       }
+     };
+     if (users.length > 0) {
+       checkfollow(userId, users);
+     }
+   }, [userId, users]);
 
   const fetchingData = async () => {
     const res = await getUserById(params.id);
@@ -92,7 +161,7 @@ const Profile = () => {
     }, [buttonActive]);
 
 
-
+  const isFollowing = statusFollow.get(user.id);
   return (
     <div key={dataUser?.id}>
       <div style={{ display: "flex" }}>
@@ -157,7 +226,7 @@ const Profile = () => {
               justifyContent: "flex-end",
               marginTop: "10px",
             }}>
-            {dataUser?.isFollow ? (
+            {isFollowing ? (
               <button
                 style={{
                   padding: 5,
@@ -168,7 +237,8 @@ const Profile = () => {
                   cursor: "pointer",
                   height: 30,
                 }}
-                type="submit">
+                type="submit"
+                onClick={() => unfollow(userId, user.id)}>
                 Following
               </button>
             ) : (
@@ -182,7 +252,8 @@ const Profile = () => {
                   cursor: "pointer",
                   height: 30,
                 }}
-                type="submit">
+                type="submit"
+                onClick={() => followFunc(userId, user.id)}>
                 Follow
               </button>
             )}
@@ -201,10 +272,8 @@ const Profile = () => {
           </Typography>
 
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-            {dataUser.following || 0}{" "}
-            <span style={{ color: "gray" }}>Following </span>{" "}
-            {dataUser.followers || 0}{" "}
-            <span style={{ color: "gray" }}>Followers</span>
+            {followers || 0} <span style={{ color: "gray" }}>Following </span>{" "}
+            {follows || 0} <span style={{ color: "gray" }}>Followers</span>
           </Typography>
         </Container>
       </Box>
@@ -253,17 +322,17 @@ const Profile = () => {
               overflowY: "auto",
               maxHeight: 500,
             }}>
-            {dataPost.map((post: any) => (
+            {dataPost.map((post: IPostModel) => (
               <div
                 style={{
                   display: "flex",
                   borderBottom: "1px solid gray",
                   padding: " 10px",
                 }}>
-                {post?.author?.profile_pic ? (
+                {post?.author?.profil_pic ? (
                   <Avatar
                     sx={{ width: 20, height: 20 }}
-                    src={post.author.profile_pic}
+                    src={post.author.profil_pic}
                   />
                 ) : (
                   <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
@@ -302,20 +371,18 @@ const Profile = () => {
                     style={{ cursor: "pointer" }}>
                     {post.content}{" "}
                   </p>
+                  {post.images.length > 0 &&
+                    post.images.map((image: { image: string }) => (
+                      <img
+                        src={`${baseUrl}${image.image}`}
+                        alt=""
+                        style={{ width: 150, padding: 10, cursor: "pointer" }}
+                        key={image.image}
+                      />
+                    ))}
                   <div style={{ display: "flex", gap: 16 }}>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <Checkbox
-                        icon={<FavoriteBorder />}
-                        checkedIcon={<Favorite sx={{ color: "pink" }} />}
-                        defaultChecked={post.isLike ? true : false}
-                        sx={{
-                          "& .MuiSvgIcon-root": { fontSize: 20 },
-                          padding: 0,
-                        }}
-                      />
-                      <span style={{ color: "gray", paddingLeft: 6 }}>
-                        {post.like || 0}
-                      </span>{" "}
+                      <Like postId={post.id} />
                     </div>
                     <div
                       style={{ display: "flex", alignItems: "center" }}
@@ -324,7 +391,7 @@ const Profile = () => {
                       }}>
                       <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                       <span style={{ color: "gray", paddingLeft: 6 }}>
-                        {post.replies || 0}
+                        {post.comments.length || 0}
                       </span>{" "}
                     </div>
                   </div>

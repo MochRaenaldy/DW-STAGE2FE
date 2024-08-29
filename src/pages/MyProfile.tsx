@@ -9,18 +9,34 @@ import { getAllPostByUserId } from "../libs/api/call/home";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import Media from "./Media";
+import Like from "../components/Like/like";
+import { IPostModel } from "../types/post";
+import { api } from "../libs/api";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user } = useStore();
   // const params = useParams();
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [followers, setFollowers] = useState<number>(0);
+  const [follows, setFollows] = useState<number>(0);
+  const userId = user.id;
   const [dataPost, setDataPost] = useState([])
   const [buttonActive, setButtonActive] = useState<"allpost" | "media">("allpost")
+  const baseUrl = "http://localhost:3000/uploads/";
   // const [dataUser, setDataUser] = useState<IProfile>(defaultData);
   // console.log(typeof params.id);
 
-  console.log(user)
+    const countFollow = async (userId: number) => {
+      const res = await api.get(`/users/follows/${userId}`);
+      setFollowers(res.data.followers);
+      setFollows(res.data.following);
+    };
+
+    useEffect(() => {
+      countFollow(userId);
+    }, [userId]);
+
 
    const fetchingAllPost = async () => {
      const res = await getAllPostByUserId(String(user?.id));
@@ -114,8 +130,13 @@ const Profile = () => {
         </Typography>
 
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-          291 <span style={{ color: "gray" }}>Following </span> 23{" "}
-          <span style={{ color: "gray" }}>Followers</span>
+          <span style={{ color: "gray" }}>{followers}Follow</span>{" "}
+          {
+            <span style={{ color: "gray" }}>
+              {follows} Followers
+              {/*dataUser.followers*/}{" "}
+            </span>
+          }
         </Typography>
       </Container>
       {openModal && (
@@ -157,17 +178,17 @@ const Profile = () => {
               overflowY: "auto",
               maxHeight: 426,
             }}>
-            {dataPost.map((post: any) => (
+            {dataPost.map((post: IPostModel) => (
               <div
                 style={{
                   display: "flex",
                   borderBottom: "1px solid gray",
                   padding: " 10px",
                 }}>
-                {post?.author?.profile_pic ? (
+                {post?.author?.profil_pic ? (
                   <Avatar
                     sx={{ width: 20, height: 20 }}
-                    src={post.author.profile_pic}
+                    src={post.author.profil_pic}
                   />
                 ) : (
                   <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
@@ -206,20 +227,18 @@ const Profile = () => {
                     style={{ cursor: "pointer" }}>
                     {post.content}{" "}
                   </p>
+                  {post.images.length > 0 &&
+                    post.images.map((image: { image: string }) => (
+                      <img
+                        src={`${baseUrl}${image.image}`}
+                        alt=""
+                        style={{ width: 150, padding: 10, cursor: "pointer" }}
+                        key={image.image}
+                      />
+                    ))}
                   <div style={{ display: "flex", gap: 16 }}>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <Checkbox
-                        icon={<FavoriteBorder />}
-                        checkedIcon={<Favorite sx={{ color: "pink" }} />}
-                        defaultChecked={post.isLike ? true : false}
-                        sx={{
-                          "& .MuiSvgIcon-root": { fontSize: 20 },
-                          padding: 0,
-                        }}
-                      />
-                      <span style={{ color: "gray", paddingLeft: 6 }}>
-                        {post.like || 0}
-                      </span>{" "}
+                      <Like postId={post.id} />
                     </div>
                     <div
                       style={{ display: "flex", alignItems: "center" }}
@@ -228,7 +247,7 @@ const Profile = () => {
                       }}>
                       <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                       <span style={{ color: "gray", paddingLeft: 6 }}>
-                        {post.replies || 0}
+                        {post.comments.length || 0}
                       </span>{" "}
                     </div>
                   </div>

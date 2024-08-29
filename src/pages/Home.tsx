@@ -7,6 +7,7 @@ import {
   Input,
   Snackbar,
   TextField,
+  Typography,
 } from "@mui/material";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
@@ -15,10 +16,14 @@ import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import useStore from "../stores/hooks";
 import CustomInput from "../components/common/Input";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { api } from "../libs/api";
 import { createPost, getPost } from "../libs/api/call/home";
+import Like from "../components/Like/like";
+import { IPostModel } from "../types/post";
+import baseUrl from "../utils/baseUrl";
+// import Inputpost from "../components/Inputpost";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -30,17 +35,18 @@ const Home = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [successPost, setSuccessPost] = useState(false);
   const [message, setMessage] = useState("");
-
-  const handleChangePhoto = (e: any) => {
-    const objectUrl = URL.createObjectURL(e.target.files[0]);
-    setPhoto(objectUrl);
-  };
+  const baseUrll = "http://localhost:3000/uploads/";
 
   const handleSendPost = async () => {
-    const body = {
-      content: input,
-    };
-    const response = await createPost(body);
+    const formData = new FormData();
+    formData.append("content", input);
+    if (photo) {
+      for (let i = 0; i < photo.length; i++) {
+        formData.append("images", photo[i]);
+      }
+    }
+
+    const response = await createPost(formData);
     if (response && response?.status === 200) {
       setMessage("Success Create Postingan");
       setSuccessPost(true);
@@ -56,6 +62,12 @@ const Home = () => {
     }
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhoto(e.target.files);
+    }
+  };
+
   const fetchingData = async () => {
     const res = await getPost();
     if (res && res?.status === 200) {
@@ -68,7 +80,7 @@ const Home = () => {
   useEffect(() => {
     fetchingData();
   }, []);
-  
+
   return (
     <div>
       <div>
@@ -82,8 +94,9 @@ const Home = () => {
           paddingBottom: 10,
           width: "100%",
         }}>
-        <div style={{ width: "70%" }}>
+        <div style={{ width: "70%", display: "flex" }}>
           <Avatar sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
+            <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
             <span style={{ fontSize: 10, display: "flex" }}>
               {user.username}
               {/* {user.username.charAt(0).toUpperCase()} */}
@@ -97,22 +110,32 @@ const Home = () => {
             style={{ marginLeft: 20, width: "90%", border: "none" }}
           />
         </div>
+
         <div
           style={{
             width: "30%",
             display: "flex",
             justifyContent: "flex-end",
-            paddingRight: "5px",
+            paddingRight: "30px",
           }}>
-         
-            <AddPhotoAlternateOutlinedIcon
-              sx={{
-                color: "green",
-                height: "60px",
-                cursor: "pointer",
-                marginRight: "10px",
-              }}
-            />
+          <AddPhotoAlternateOutlinedIcon
+            sx={{
+              color: "green",
+              height: "60px",
+              cursor: "pointer",
+              marginRight: "10px",
+            }}
+            onClick={() => refImage.current?.click()}
+          />
+          <input
+            type="file"
+            multiple
+            ref={refImage}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+            accept="images/*"
+          />
+
           <button
             style={{
               backgroundColor: "green",
@@ -128,20 +151,21 @@ const Home = () => {
         </div>
       </div>
       <div>
-        {dataPost.map((post: any) => (
+        {dataPost.map((post: IPostModel) => (
           <div
             style={{
               display: "flex",
               borderBottom: "1px solid gray",
               padding: " 10px",
             }}>
-            {post?.author?.profile_pic ? (
+            {post?.author?.profil_pic ? (
               <Avatar
                 sx={{ width: 20, height: 20 }}
-                src={post.author.profile_pic}
+                src={post.author.profil_pic}
               />
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+                <img src={`${baseUrl.baseUrlImg}${post.author.profil_pic}`} alt="" />
                 <span style={{ fontSize: 10, display: "flex" }}>
                   {post.author.username}
                   {/* {post.user.username.charAt(0).toUpperCase()} */}
@@ -173,18 +197,17 @@ const Home = () => {
                 style={{ cursor: "pointer" }}>
                 {post.content}{" "}
               </p>
-              <div style={{ display: "flex", gap: 16 }}>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Checkbox
-                    icon={<FavoriteBorder />}
-                    checkedIcon={<Favorite sx={{ color: "red" }} />}
-                    defaultChecked={post.isLike ? true : false}
-                    sx={{ "& .MuiSvgIcon-root": { fontSize: 20 }, padding: 0 }}
+              {post.images.length > 0 &&
+                post.images.map((image: { image: string }) => (
+                  <img
+                    src={`${baseUrll}${image.image}`}
+                    alt=""
+                    style={{ width: 150, padding: 10, cursor: "pointer" }}
+                    key={image.image}
                   />
-                  <span style={{ color: "gray", paddingLeft: 6 }}>
-                    {post.like || 0}
-                  </span>{" "}
-                </div>
+                ))}
+              <div style={{ display: "flex", gap: 16 }}>
+                <Like postId={post.id} />
                 <div
                   style={{ display: "flex", alignItems: "center" }}
                   onClick={() => {
@@ -192,7 +215,7 @@ const Home = () => {
                   }}>
                   <InsertCommentOutlinedIcon sx={{ fontSize: "18px" }} />{" "}
                   <span style={{ color: "gray", paddingLeft: 6 }}>
-                    {post.replies || 0}
+                    {post.comments.length || 0}
                   </span>{" "}
                 </div>
               </div>

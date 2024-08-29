@@ -10,46 +10,95 @@ import {
   getUserById,
   getUserByUsername,
 } from "../../libs/api/call/user";
-import { IUserList } from "../../types/store";
-import { DoorBack } from "@mui/icons-material";
+import { IUser, IUserList } from "../../types/store";
+import { DoorBack, Try } from "@mui/icons-material";
 import { api } from "../../libs/api";
+import { Ifollow } from "../../types/follow";
+import baseUrl from "../../utils/baseUrl";
 
 const Rightbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useStore();
+  const { user ,getUsers, users} = useStore();
   const params = useParams();
   const userId = user.id;
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [isFollow, setisFollow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statusFollow, setStatusFollow] = useState<Map<number, boolean>>(new Map());
   const [datauserbaru, setDatauserbaru] = useState<IUserList[]>();
+  const [follows, setFollows] = useState<number>(0);
+  const [followers, setFollowers] = useState<number>(0);
 
-  const followFunc = async () => {
-    const res = await api.post(`/follow/${userId}`);
+  console.log(users);
+
+  const followFunc = async (followersId: number , followingId: number) => {
+    try {
+    const res = await api.post("/follow" , {followersId, followingId});
     if (res.data) {
-      setisFollow(true);
+      setStatusFollow((prev) => new Map(prev).set(  followingId, true));
+    }
+  } catch (error) {
+  } finally {
+    setLoading(false)
+  }
+};
+
+  const unfollow = async (followersId: number, followingId: number) => {
+    setLoading(true)
+    try {
+      await api.post("/follow/unfollow", {followersId, followingId});
+      setStatusFollow((prev) => new Map(prev).set(  followingId, false));
+    } catch (error) {
+    } finally{
+      setLoading(false)
     }
   };
 
-  const unfollow = async () => {
-    const res = await api.delete(`follow/${userId}`);
-    if (res.data) {
-      setisFollow(false);
-    }
+  const countFollow = async (userId: number) => {
+    const res = await api.get(`/users/follows/${userId}`);
+    setFollowers(res.data.followers);
+    setFollows(res.data.following);
   };
 
-  useEffect (() => {
-    const getuser = async (userId :number) => {
-      try {
-        const res = await api.get(`/users/userlogin/${userId}`);
-        setDatauserbaru(res.data);
-      } catch (error) {
-        console.log(error)
+  useEffect(() => {
+    countFollow(userId);
+  }, [userId]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      getUsers(userId);
+    };
+    fetchUsers();
+  }, [userId]);
+
+
+    useEffect(() => {
+      const checkfollow = async (followersId: number, users: IUserList[]) => {
+        setLoading(true);
+        try {
+          const res = await api.post("/follow/check", { followersId, users });
+          const followMap = new Map<number, boolean>(
+            res.data.map((user: { id: number; isFollowing: boolean }) => [
+              user.id,
+              user.isFollowing,
+            ])
+          );
+          const updatedStatusFollow = new Map<number, boolean>(
+            users.map((user) => [user.id, followMap.get(user.id) || false])
+          );
+          setStatusFollow(updatedStatusFollow);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      if (users.length > 0) {
+        checkfollow(userId, users);
       }
-    }
-    getuser(userId);
-  })
+    }, [userId, users]);
 
   const fetchingData = async () => {
     const res = await findAll();
@@ -63,6 +112,7 @@ const Rightbar = () => {
 
   useEffect(() => {
     fetchingData();
+   
   }, []);
 
   return (
@@ -97,6 +147,7 @@ const Rightbar = () => {
               position: "absolute",
             }}>
             <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
+              <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
               <span style={{ fontSize: 10 }}>
                 {user.username}
                 {/* {user.username.charAt(0).toUpperCase()} */}
@@ -142,12 +193,11 @@ const Rightbar = () => {
           </Typography>
 
           <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-            <span style={{ color: "gray" }}>
-              {/*dataUser.following*/} Following
-            </span>{" "}
+            <span style={{ color: "gray" }}>{followers}Follow</span>{" "}
             {
               <span style={{ color: "gray" }}>
-                {/*dataUser.followers*/} Followers{" "}
+                {follows} Followers
+                {/*dataUser.followers*/}{" "}
               </span>
             }
           </Typography>
@@ -174,77 +224,86 @@ const Rightbar = () => {
         </div>
 
         <div>
-          {datauserbaru &&
-            datauserbaru?.map((post) => (
-              <div
-                style={{
-                  display: "flex",
-                  borderBottom: "1px solid gray",
-                  padding: "10px",
-                }}>
-                {post.profile_pic ? (
-                  <Avatar
-                    sx={{ width: 20, height: 20 }}
-                    src={post.profile_pic}
-                  />
-                ) : (
-                  <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
-                    <span style={{ fontSize: 10 }}>
-                      {post.username}
-                      {/* {post.user.username.charAt(0).toUpperCase()} */}
-                    </span>
-                  </Avatar>
-                )}
+          {users &&
+            users?.map((post) => {
+              const isFollowing = statusFollow.get(post.id);
+              return (
                 <div
-                  key={post.id}
                   style={{
-                    paddingLeft: 8,
                     display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
+                    borderBottom: "1px solid gray",
+                    padding: "10px",
                   }}>
-                  <div>
-                    <p
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        window.location.replace(`/profile/${post.id}`)
-                      }>
-                      {post.username}
-                    </p>
-                    <p style={{ color: "grey" }}>{post.email}</p>
-                  </div>
-                  {post.isfollow ? (
-                    <button
-                      style={{
-                        padding: 5,
-                        borderRadius: 50,
-                        color: "gray",
-                        backgroundColor: "#1d1d1d",
-                        border: "1px solid gray",
-                        cursor: "pointer",
-                        height: 30,
-                      }}
-                      type="submit">
-                      Following
-                    </button>
+                  {post.profile_pic ? (
+                    <Avatar
+                      sx={{ width: 20, height: 20 }}
+                      src={post.profile_pic}
+                    />
                   ) : (
-                    <button
-                      style={{
-                        padding: 5,
-                        borderRadius: 50,
-                        color: "white",
-                        backgroundColor: "#1d1d1d",
-                        border: "1px solid ",
-                        cursor: "pointer",
-                        height: 30,
-                      }}
-                      type="submit">
-                      Follow
-                    </button>
+                    <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
+                      <img
+                        src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                        alt=""
+                      />
+                      <span style={{ fontSize: 10 }}>
+                        {user.username}
+                        {/* {user.username.charAt(0).toUpperCase()} */}
+                      </span>
+                    </Avatar>
                   )}
+                  <div
+                    key={post.id}
+                    style={{
+                      paddingLeft: 8,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}>
+                    <div>
+                      <p
+                        style={{ cursor: "pointer" }}
+                        onClick={() =>
+                          window.location.replace(`/profile/${post.id}`)
+                        }>
+                        {post.username}
+                      </p>
+                      <p style={{ color: "grey" }}>{post.email}</p>
+                    </div>
+                    {isFollowing ? (
+                      <button
+                        style={{
+                          padding: 5,
+                          borderRadius: 50,
+                          color: "gray",
+                          backgroundColor: "#1d1d1d",
+                          border: "1px solid gray",
+                          cursor: "pointer",
+                          height: 30,
+                        }}
+                        type="submit"
+                        onClick={() => unfollow(userId, post.id)}>
+                        Following
+                      </button>
+                    ) : (
+                      <button
+                        style={{
+                          padding: 5,
+                          borderRadius: 50,
+                          color: "white",
+                          backgroundColor: "#1d1d1d",
+                          border: "1px solid ",
+                          cursor: "pointer",
+                          height: 30,
+                        }}
+                        type="submit"
+                        onClick={() => followFunc(userId, post.id)}>
+                        Follow
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </Container>
 

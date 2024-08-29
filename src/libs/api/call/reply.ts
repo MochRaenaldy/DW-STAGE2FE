@@ -5,7 +5,7 @@ export const getReplyByPostId = async (postId: string) => {
   return response;
 };
 
-export const addReply = async (postId: string, body: any) => {
-  const response = await api.post(`/reply/create/${postId}`, body);
-  return response;
+export const addReply = async (postId: string, formData: any) => {
+  const response = await api.post(`/reply/create/${postId}`, formData, {headers: {"Content-Type": "multipart/form-data"}});
+  return response; 
 };

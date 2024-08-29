@@ -15,6 +15,7 @@ import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateT
 import { getUserById, update } from "../../libs/api/call/user";
 import useStore from "../../stores/hooks";
 import { checkAuth } from "../../libs/api/call/auth";
+import baseUrl from "../../utils/baseUrl";
 
 interface IModal {
   open: boolean;
@@ -27,44 +28,42 @@ const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
   const [openAlert, setOpenAlert] = useState(false);
   const [successPost, setSuccessPost] = useState(false);
   const [message, setMessage] = useState("");
-  const {user} = useStore()
-  const [form, setForm] = useState(user)
-  const { setUser } = useStore(); 
+  const { user } = useStore();
+  const [form, setForm] = useState(user);
+  const { setUser } = useStore();
   const handleChangePhoto = (e: any) => {
     const objectUrl = URL.createObjectURL(e.target.files[0]);
     setPhoto(objectUrl);
   };
 
   const handleChangeForm = (e: any) => {
-      setForm({...form, [e.target.name]: e.target.value})
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  
-  const getProfile = async() => {
-    const res = await checkAuth()
+  const getProfile = async () => {
+    const res = await checkAuth();
     if (res?.data) {
-      setUser(res?.data)
+      setUser(res?.data);
     }
-  }
+  };
 
   const handleupdate = async () => {
     const body = {
-     ...form
+      ...form,
     };
-     const response = await update(Number(user?.id), body);
+    const response = await update(Number(user?.id), body);
     if (response && response?.status === 200) {
       setMessage("Success update user");
-      getProfile()
+      getProfile();
       setSuccessPost(true);
       setOpenAlert(true);
-      onClose()
+      onClose();
     } else {
       setMessage("Failed update user");
       setSuccessPost(false);
       setOpenAlert(true);
     }
   };
-
 
   return (
     <Dialog
@@ -134,7 +133,7 @@ const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
               ref={refImage}
               style={{ visibility: "hidden" }}
               onChange={handleChangePhoto}
-              accept="image/*"
+              src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
             />
           </div>
         </div>

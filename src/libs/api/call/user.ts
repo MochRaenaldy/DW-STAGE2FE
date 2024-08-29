@@ -16,6 +16,6 @@ export const findAll = async () => {
 };
 
 export const update = async (id: number, body :any) => {
-  const response = await api.put(`/users/update/${id}`, body);
+  const response = await api.patch(`/users/update/${id}`, body);
   return response;
 };
