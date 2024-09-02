@@ -166,7 +166,7 @@ const Home = () => {
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                 <img
-                  src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                  src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
                   alt=""
                 />
                 <span style={{ fontSize: 10, display: "flex" }}>

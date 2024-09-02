@@ -17,11 +17,13 @@ import { Ipostform, IPostModel } from "../types/post";
 import Like from "../components/Like/like";
 import Inputpost from "../components/Inputpost";
 import baseUrl from "../utils/baseUrl";
+import useStore from "../stores/hooks";
 
 
 const Detail = () => {
   const navigate = useNavigate();
   const params = useParams();
+  const {user} = useStore();
   const [dataPost, setDataPost] = useState<IPostModel>();
   const [input, setInput] = useState<string>("");
    const [photo, setPhoto] = useState<any>(null);
@@ -121,19 +123,21 @@ const Detail = () => {
           {dataPost && (
             <div key={dataPost?.id}>
               <div style={{ display: "flex" }}>
-                {dataPost?.author?.profil_pic ? (
+                {/* {user.profile_pic ? (
                   <img
                     src={`${baseUrl.baseUrlImg}${dataPost.author.profil_pic}`}
                     alt=""
                   />
-                ) : (
-                  <Avatar sx={{ bgcolor: "yellow", width: 40, height: 40 }}>
-                    <span style={{ fontSize: 10, display: "flex" }}>
-                      {/* {dataPost.author.username} */}
-                      {dataPost?.author?.username.charAt(0).toUpperCase()}
-                    </span>
-                  </Avatar>
-                )}
+                ) : ( */}
+                <Avatar
+                  src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
+                  sx={{ bgcolor: "yellow", width: 40, height: 40 }}>
+                  <span style={{ fontSize: 10, display: "flex" }}>
+                    {/* {dataPost.author.username} */}
+                    {dataPost?.author?.username.charAt(0).toUpperCase()}
+                  </span>
+                </Avatar>
+
                 <div style={{ marginLeft: "10px" }}>
                   <p>{dataPost?.author?.username}</p>
                   <p style={{ color: "gray" }}>{dataPost?.author?.email}</p>
@@ -178,7 +182,7 @@ const Detail = () => {
           <div style={{ width: "70%", display: "flex" }}>
             <Avatar
               sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
-              <img src={`${baseUrl.baseUrlImg}${dataPost?.author?.profil_pic}`} alt="" />
+              <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
               <span style={{ fontSize: 10, display: "flex" }}>
                 {dataPost?.author.username}
                 {/* {user.username.charAt(0).toUpperCase()} */}
@@ -195,7 +199,6 @@ const Detail = () => {
 
           <div
             style={{
-              
               display: "flex",
               justifyContent: "flex-end",
               paddingRight: "40px",
@@ -209,7 +212,7 @@ const Detail = () => {
               }}
               onClick={() => refImage.current?.click()}
             />
-            
+
             <input
               type="file"
               multiple
@@ -247,7 +250,7 @@ const Detail = () => {
                     borderTop: "1px solid gray",
                     padding: 4,
                   }}>
-                  <Avatar src={replies.author.profil_pic} />
+                  <Avatar src={`${baseUrl.baseUrlImg}${user.profile_pic}`} />
                   <p>{replies.author.username}</p>
                 </div>
                 <p>{replies.content}</p>
