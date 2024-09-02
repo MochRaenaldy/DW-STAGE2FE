@@ -9,7 +9,7 @@ if (tokenAuth) {
 }
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:3000",
+  baseURL: import.meta.env.API_URL || "https://dw-stage-2-be.vercel.app/",
   headers: headers,
 });
 
