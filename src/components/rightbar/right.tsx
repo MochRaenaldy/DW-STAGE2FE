@@ -13,7 +13,7 @@ import {  IUserList } from "../../types/store";
 
 import { api } from "../../libs/api";
 
-import baseUrl from "../../utils/baseUrl";
+// import baseUrl from "../../utils/baseUrl";
 
 const Rightbar = () => {
   const navigate = useNavigate();
@@ -240,15 +240,15 @@ const Rightbar = () => {
                     borderBottom: "1px solid gray",
                     padding: "10px",
                   }}>
-                  {post.profile_pic ? (
+                  {user.profile_pic ? (
                     <Avatar
                       sx={{ width: 20, height: 20 }}
-                      src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                      src={`${user.profile_pic}`}
                     />
                   ) : (
                     <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                       <img
-                        src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                        src={`${user.profile_pic}`}
                         alt=""
                       />
                       <span style={{ fontSize: 10 }}>

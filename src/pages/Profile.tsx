@@ -21,7 +21,7 @@ import Like from "../components/Like/like";
 import { IPostModel } from "../types/post";
 import { api } from "../libs/api";
 import { IUserList } from "../types/store";
-import baseUrl from "../utils/baseUrl";
+// import baseUrl from "../utils/baseUrl";
 
 export interface IProfile {
   id: number;
@@ -60,7 +60,7 @@ const Profile = () => {
    const [dataPost, setDataPost] = useState([]);
      const { user, users } = useStore();
      const userId = user.id;
-     const baseUrll = "http://localhost:3000/uploads/";
+    //  const baseUrll = "http://localhost:3000/uploads/";
      const [followers, setFollowers] = useState<number>(0);
      const [follows, setFollows] = useState<number>(0);
      const [loading, setLoading] = useState<boolean>(false);
@@ -203,7 +203,7 @@ const Profile = () => {
                 height: "100px",
                 position: "absolute",
               }}
-              src={`${baseUrl.baseUrlImg}${dataUser.profile_pic}`}
+              src={`${dataUser.profile_pic}`}
             />
           ) : (
             <Avatar
@@ -376,7 +376,7 @@ const Profile = () => {
                   {post.images.length > 0 &&
                     post.images.map((image: { image: string }) => (
                       <img
-                        src={`${baseUrll}${image.image}`}
+                        src={`${image.image}`}
                         alt=""
                         style={{ width: 150, padding: 10, cursor: "pointer" }}
                         key={image.image}

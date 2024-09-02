@@ -15,7 +15,7 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { createPost, getPost } from "../libs/api/call/home";
 import Like from "../components/Like/like";
 import { IPostModel } from "../types/post";
-import baseUrl from "../utils/baseUrl";
+// import baseUrl from "../utils/baseUrl";
 // import Inputpost from "../components/Inputpost";
 
 const Home = () => {
@@ -28,7 +28,7 @@ const Home = () => {
   const [openAlert, setOpenAlert] = useState(false);
   const [successPost, setSuccessPost] = useState(false);
   const [message, setMessage] = useState("");
-  const baseUrll = "http://localhost:3000/uploads/";
+  // const baseUrll = "http://localhost:3000/uploads/";
 
   const handleSendPost = async () => {
     const formData = new FormData();
@@ -89,7 +89,7 @@ const Home = () => {
         }}>
         <div style={{ width: "70%", display: "flex" }}>
           <Avatar sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
-            <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
+            <img src={`${user.profile_pic}`} alt="" />
             <span style={{ fontSize: 10, display: "flex" }}>
               {user.username}
               {/* {user.username.charAt(0).toUpperCase()} */}
@@ -154,12 +154,12 @@ const Home = () => {
             {post?.author?.profil_pic ? (
               <Avatar
                 sx={{ width: 20, height: 20 }}
-                src={`${baseUrl.baseUrlImg}${post.profile_pic}`}
+                src={`${user.profile_pic}`}
               />
             ) : (
               <Avatar sx={{ bgcolor: "yellow", width: 20, height: 20 }}>
                 <img
-                  src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
+                  src={`${user.profile_pic}`}
                   alt=""
                 />
                 <span style={{ fontSize: 10, display: "flex" }}>
@@ -196,7 +196,7 @@ const Home = () => {
               {post.images.length > 0 &&
                 post.images.map((image: { image: string }) => (
                   <img
-                    src={`${baseUrll}${image.image}`}
+                    src={`${image.image}`}
                     alt=""
                     style={{ width: 150, padding: 10, cursor: "pointer" }}
                     key={image.image}

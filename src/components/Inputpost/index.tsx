@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import useStore from "../../stores/hooks";
 import { createPost, getPost } from "../../libs/api/call/home";
 import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
-import baseUrl from "../../utils/baseUrl";
+// import baseUrl from "../../utils/baseUrl";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 
 // function setMessage() {
@@ -109,7 +109,7 @@ const Inputpost: React.FC<IModal> = ({ open, onClose }) => {
           <div style={{ width: "90%", display: "flex" }}>
             <Avatar
               sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
-              <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
+              <img src={`${user.profile_pic}`} alt="" />
               <span style={{ fontSize: 10, display: "flex" }}>
                 {user.username}
                 {dataPost.length}

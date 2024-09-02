@@ -12,7 +12,7 @@ import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternate
 import { IPostModel } from "../types/post";
 import Like from "../components/Like/like";
 import Inputpost from "../components/Inputpost";
-import baseUrl from "../utils/baseUrl";
+// import baseUrl from "../utils/baseUrl";
 import useStore from "../stores/hooks";
 
 const Detail = () => {
@@ -25,7 +25,7 @@ const Detail = () => {
   const [dataReply, setDataReply] = useState<IPostModel[]>([]);
   const refImage: any = useRef(null);
   const [openModal, setOpenModal] = useState(false);
-  const baseUrll = "http://localhost:3000/uploads/";
+  // const baseUrll = "http://localhost:3000/uploads/";
 
   console.log(dataReply);
 
@@ -124,7 +124,7 @@ const Detail = () => {
                     alt=""
                   />
                 ) : ( */}
-                <Avatar src={`${baseUrl.baseUrlImg}${user.profile_pic}`}
+                <Avatar src={`${user.profile_pic}`}
                   // sx={{ bgcolor: "yellow", width: 40, height: 40 }}
                   >
                   {/* <span style={{ fontSize: 10, display: "flex" }}>
@@ -140,7 +140,7 @@ const Detail = () => {
               {dataPost.images.length > 0 &&
                 dataPost?.images.map((image: { image: string }) => (
                   <img
-                    src={`${baseUrll}${image.image}`}
+                    src={`${image.image}`}
                     alt=""
                     style={{
                       width: 120,
@@ -175,7 +175,7 @@ const Detail = () => {
           <div style={{ width: "70%", display: "flex" }}>
             <Avatar
               sx={{ bgcolor: "red", width: 20, height: 20, ml: 1, mt: 2 }}>
-              <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
+              <img src={`${user.profile_pic}`} alt="" />
               <span style={{ fontSize: 10, display: "flex" }}>
                 {dataPost?.author.username}
                 {/* {user.username.charAt(0).toUpperCase()} */}
@@ -243,14 +243,14 @@ const Detail = () => {
                     borderTop: "1px solid gray",
                     padding: 4,
                   }}>
-                  <Avatar src={`${baseUrl.baseUrlImg}${user.profile_pic}`} />
+                  <Avatar src={`${user.profile_pic}`} />
                   <p>{replies.author.username}</p>
                 </div>
                 <p>{replies.content}</p>
                 {replies.images.length > 0 &&
                   replies.images.map((image: { image: string }) => (
                     <img
-                      src={`${baseUrll}${image.image}`}
+                      src={`${image.image}`}
                       alt=""
                       style={{ width: 150, padding: 10, cursor: "pointer" }}
                       key={image.image}
