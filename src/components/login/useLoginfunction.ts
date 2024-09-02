@@ -1,9 +1,9 @@
 import { setAuthToken } from "../../libs/api";
 import * as authAsync from "../../libs/api/call/auth";
-import useStore from "../../stores/hooks";
+// import useStore from "../../stores/hooks";
 
 export const useLoginFunction = () => {
-  const { setUser } = useStore();
+  // const { setUser } = useStore();
 
   const login = async (username: string, password: string) => {
     try {

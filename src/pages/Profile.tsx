@@ -1,20 +1,20 @@
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import {
   Avatar,
   Box,
   Button,
-  Checkbox,
+  
   Container,
-  Stack,
+  
   Typography,
 } from "@mui/material";
-import { dummyContentList, dummyUserList } from "../utils/dummyData";
+
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import useStore from "../stores/hooks";
 import { useEffect, useState } from "react";
 import { getUserById } from "../libs/api/call/user";
 import { getAllPostByUserId } from "../libs/api/call/home";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
+
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import Media from "./Media"
 import Like from "../components/Like/like";
@@ -58,7 +58,7 @@ const Profile = () => {
   const params = useParams();
   const [dataUser, setDataUser] = useState<IProfile>(defaultData);
    const [dataPost, setDataPost] = useState([]);
-     const { user, users, getUsers } = useStore();
+     const { user, users } = useStore();
      const userId = user.id;
      const baseUrll = "http://localhost:3000/uploads/";
      const [followers, setFollowers] = useState<number>(0);
@@ -257,7 +257,8 @@ const Profile = () => {
                 onClick={() => followFunc(userId, user.id)}>
                 Follow
               </button>
-            )}
+            )}{" "}
+            disabled = {loading}
           </Box>
           <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1, mt: 3 }}>
             {dataUser.username}

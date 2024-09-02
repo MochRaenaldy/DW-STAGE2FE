@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import {
-  Button,
+  
   CircularProgress,
   FormControl,
   FormHelperText,
   IconButton,
-  Input,
+  
   InputAdornment,
   Typography,
 } from "@mui/material";
@@ -13,14 +13,14 @@ import {
 import CustomInput from "../common/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
-import useStore from "../../stores/hooks";
-import { IUser } from "../../types/store";
+import { Link,  } from "react-router-dom";
+
+
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ILoginForm } from "../../types/login";
 import { useLoginFunction } from "./useLoginfunction";
-import { Token, Visibility, VisibilityOff } from "@mui/icons-material";
-import { setAuthToken } from "../../libs/api";
+import {  Visibility, VisibilityOff } from "@mui/icons-material";
+
 
 const LoginForm = () => {
   const Loginfunc = useLoginFunction();
@@ -28,13 +28,13 @@ const LoginForm = () => {
   const [successLogin, setSuccessLogin] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
-  const { setUser } = useStore();
+  // const navigate = useNavigate();
+  // const { setUser } = useStore();
   const schema = yup.object({
     username: yup.string().required("username is require"),
     password: yup.string().required("password is require"),
   });
-  const { handleSubmit, control, watch, reset } = useForm<ILoginForm>({
+  const { handleSubmit, control, reset } = useForm<ILoginForm>({
     resolver: yupResolver(schema),
     defaultValues: {
       username: "",

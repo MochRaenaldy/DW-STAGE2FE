@@ -1,21 +1,19 @@
-import { Avatar, InputAdornment, Typography } from "@mui/material";
+import { Avatar, InputAdornment, } from "@mui/material";
 import CustomInput from "../components/common/Input";
 import PersonSearchOutlinedIcon from "@mui/icons-material/PersonSearchOutlined";
 import { useEffect, useState } from "react";
-import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
-import { useNavigate, useParams } from "react-router-dom";
-import { dummyUserList } from "../utils/dummyData";
+
+import { useNavigate, } from "react-router-dom";
+
 import { getUserByUsername } from "../libs/api/call/user";
-import { IProfile, IUserList } from "../types/store";
+import { IUserList } from "../types/store";
 import { api } from "../libs/api";
 import useStore from "../stores/hooks";
 import baseUrl from "../utils/baseUrl";
 
 const SearchPage = () => {
   const navigate = useNavigate();
-  const params = useParams();
+  // const params = useParams();
   const [search, setSearch] = useState<string>("");
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const { user, users, getUsers } = useStore();
@@ -190,6 +188,7 @@ const SearchPage = () => {
                       Follow
                     </button>
                   )}
+                  disabled = {loading}
                 </div>
               </div>
             );

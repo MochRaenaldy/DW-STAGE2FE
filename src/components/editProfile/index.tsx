@@ -12,10 +12,10 @@ import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import CustomInput from "../common/Input";
 import { useRef, useState } from "react";
 import AddPhotoAlternateTwoToneIcon from "@mui/icons-material/AddPhotoAlternateTwoTone";
-import { getUserById, update } from "../../libs/api/call/user";
+import {  update } from "../../libs/api/call/user";
 import useStore from "../../stores/hooks";
 import { checkAuth } from "../../libs/api/call/auth";
-import baseUrl from "../../utils/baseUrl";
+// import baseUrl from "../../utils/baseUrl";
 
 interface IModal {
   open: boolean;

@@ -6,7 +6,7 @@ import useStore, {} from "../../stores/hooks"
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import { useState } from "react";
 
-import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
+
 import Inputpost from "../Inputpost";
 
 const Sidebar = () => {

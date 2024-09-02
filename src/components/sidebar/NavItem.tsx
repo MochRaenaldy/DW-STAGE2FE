@@ -1,4 +1,4 @@
-import { Avatar, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { NavLink } from "react-router-dom";
 import OtherHousesIcon from "@mui/icons-material/OtherHouses";
 import OtherHousesOutlinedIcon from "@mui/icons-material/OtherHousesOutlined";

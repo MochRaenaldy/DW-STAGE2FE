@@ -1,34 +1,33 @@
 import { Avatar, Box, Container, Typography } from "@mui/material";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, } from "react-router-dom";
 import useStore from "../../stores/hooks";
-import { dummyUserList } from "../../utils/dummyData";
+
 import { useEffect, useState } from "react";
 import EditProfile from "../editProfile";
-import { IProfile } from "../../pages/Profile";
+
 import {
   findAll,
-  getUserById,
-  getUserByUsername,
+  
 } from "../../libs/api/call/user";
-import { IUser, IUserList } from "../../types/store";
-import { DoorBack, Try } from "@mui/icons-material";
+import {  IUserList } from "../../types/store";
+
 import { api } from "../../libs/api";
-import { Ifollow } from "../../types/follow";
+
 import baseUrl from "../../utils/baseUrl";
 
 const Rightbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user ,getUsers, users} = useStore();
-  const params = useParams();
+  // const params = useParams();
   const userId = user.id;
-  const [photo, setPhoto] = useState<any>(null);
+  const [photo] = useState<any>(null);
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
-  const [isFollow, setisFollow] = useState(false);
+  // const [isFollow, setisFollow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [statusFollow, setStatusFollow] = useState<Map<number, boolean>>(new Map());
-  const [datauserbaru, setDatauserbaru] = useState<IUserList[]>();
+  // const [datauserbaru, setDatauserbaru] = useState<IUserList[]>();
   const [follows, setFollows] = useState<number>(0);
   const [followers, setFollowers] = useState<number>(0);
 
@@ -156,6 +155,7 @@ const Rightbar = () => {
               />
               <span style={{ fontSize: 10 }}>
                 {user.username}
+                {}
                 {/* {user.username.charAt(0).toUpperCase()} */}
               </span>
             </Avatar>
@@ -253,6 +253,7 @@ const Rightbar = () => {
                       />
                       <span style={{ fontSize: 10 }}>
                         {user.username}
+                        {dataUser?.length}
                         {/* {user.username.charAt(0).toUpperCase()} */}
                       </span>
                     </Avatar>
@@ -306,6 +307,7 @@ const Rightbar = () => {
                         Follow
                       </button>
                     )}
+                    disabled = {loading}
                   </div>
                 </div>
               );

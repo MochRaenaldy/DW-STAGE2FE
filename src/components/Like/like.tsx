@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "../../libs/api";
 import useStore from "../../stores/hooks";
-import { Box, Button, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Icon } from "@iconify/react";
 
 export default function Like(props: any) {

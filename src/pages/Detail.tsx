@@ -1,19 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
-import {
-  dummyContentList,
-  dummyRepliesContent,
-  dummyUserList,
-} from "../utils/dummyData";
-import { Avatar, Button, Checkbox, Input } from "@mui/material";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import { createPost, getPostById } from "../libs/api/call/home";
+
+import { Avatar, Input } from "@mui/material";
+
+import { getPostById } from "../libs/api/call/home";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { addReply, getReplyByPostId } from "../libs/api/call/reply";
-import CustomInput from "../components/common/Input";
+
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-import { Ipostform, IPostModel } from "../types/post";
+import {  IPostModel } from "../types/post";
 import Like from "../components/Like/like";
 import Inputpost from "../components/Inputpost";
 import baseUrl from "../utils/baseUrl";
@@ -39,12 +35,12 @@ const Detail = () => {
   //  }
 
   //  console.log(newReplies)
-  const dummycontent = dummyContentList.filter(
-    (content) => content.user.userId === Number(params.id)
-  );
-  const dummyreplies = dummyRepliesContent.filter(
-    (replies) => replies.contentReplies.contentId === Number(params.id)
-  );
+  // const dummycontent = dummyContentList.filter(
+  //   (content) => content.user.userId === Number(params.id)
+  // );
+  // const dummyreplies = dummyRepliesContent.filter(
+  //   (replies) => replies.contentReplies.contentId === Number(params.id)
+  // );
 
    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
      if (e.target.files) {

@@ -10,8 +10,8 @@ import { Controller } from "react-hook-form";
 import { IRegisterForm } from "../../types/register";
 import CustomInput from "../common/Input";
 import { useRegisterValidation } from "./hooks/useRegisterValidation";
-import { Link, useNavigate } from "react-router-dom";
-import useStore from "../../stores/hooks";
+import { Link, } from "react-router-dom";
+
 import { useRegisterFunction } from "./hooks/useRegisterFunction";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
@@ -20,15 +20,15 @@ interface IRegisterProps {
   title?: string;
 }
 
-const RegisterForm = ({ title }: IRegisterProps) => {
-  const { control, handleSubmit, reset, watch } = useRegisterValidation();
+const RegisterForm = ({ }: IRegisterProps) => {
+  const { control, handleSubmit, reset, } = useRegisterValidation();
   const registerFunction = useRegisterFunction();
   const [showPassword, setShowPassword] = useState(false);
-  const [message, setMessage] = useState<string>("");
-  const [successLogin, setSuccessLogin] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const { setUser } = useStore();
+  // const [message, setMessage] = useState<string>("");
+  // const [successLogin, setSuccessLogin] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  // const navigate = useNavigate();
+  // const { setUser } = useStore();
   const onSubmit = async (data: IRegisterForm) => {
     await registerFunction.register(data);
     reset();

@@ -2,23 +2,16 @@ import { useNavigate } from "react-router-dom";
 import {
   Alert,
   Avatar,
-  Checkbox,
-  FormControlLabel,
   Input,
   Snackbar,
-  TextField,
-  Typography,
 } from "@mui/material";
-import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
-import Favorite from "@mui/icons-material/Favorite";
-import { dummyContentList } from "../utils/dummyData";
+
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import useStore from "../stores/hooks";
-import CustomInput from "../components/common/Input";
+
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { api } from "../libs/api";
+
 import { createPost, getPost } from "../libs/api/call/home";
 import Like from "../components/Like/like";
 import { IPostModel } from "../types/post";

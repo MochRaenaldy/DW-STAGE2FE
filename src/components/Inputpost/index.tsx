@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Input, Modal, styled, TextField, Typography } from "@mui/material";
+import { Avatar, Dialog, DialogActions, DialogContent, DialogTitle, Input, styled, } from "@mui/material";
 import React, { ChangeEvent, useEffect, useRef, useState } from "react";
 import useStore from "../../stores/hooks";
 import { createPost, getPost } from "../../libs/api/call/home";
@@ -6,9 +6,9 @@ import CancelTwoToneIcon from "@mui/icons-material/CancelTwoTone";
 import baseUrl from "../../utils/baseUrl";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 
-function setMessage(arg0: string) {
-  throw new Error("Function not implemented.");
-}
+// function setMessage() {
+//   throw new Error("Function not implemented.");
+// }
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -71,14 +71,14 @@ const Inputpost: React.FC<IModal> = ({ open, onClose }) => {
     }
     const response = await createPost(formData);
     if (response && response?.status === 200) {
-      setMessage("Success Create Postingan");
+      // setMessage("Success Create Postingan");
       // setSuccessPost(true);
       // setOpenAlert(true);
       fetchingData();
       setInput("");
       onClose();
     } else {
-      setMessage("Failed Create Postingan");
+      // setMessage("Failed Create Postingan");
       // setSuccessPost(false);
       // setOpenAlert(true);
       fetchingData();
@@ -112,6 +112,7 @@ const Inputpost: React.FC<IModal> = ({ open, onClose }) => {
               <img src={`${baseUrl.baseUrlImg}${user.profile_pic}`} alt="" />
               <span style={{ fontSize: 10, display: "flex" }}>
                 {user.username}
+                {dataPost.length}
                 {/* {user.username.charAt(0).toUpperCase()} */}
               </span>
             </Avatar>
@@ -128,7 +129,6 @@ const Inputpost: React.FC<IModal> = ({ open, onClose }) => {
             style={{
               display: "flex",
               justifyContent: "flex-end",
-              
             }}>
             <AddPhotoAlternateOutlinedIcon
               sx={{

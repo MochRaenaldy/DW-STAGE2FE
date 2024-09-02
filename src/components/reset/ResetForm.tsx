@@ -1,5 +1,5 @@
-import React from 'react'
-import { Button, Input, Typography } from "@mui/material";
+
+import { Button, Typography } from "@mui/material";
 import CustomInput from "../common/Input";
 
 const LoginForm = () => {

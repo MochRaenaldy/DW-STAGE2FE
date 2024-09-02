@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import useStore from '../stores/hooks'
-import { IFollowers } from '../types/follow'
-import { Box, Typography } from '@mui/material'
-import { api } from '../libs/api'
+// import React, { useEffect, useState } from 'react'
+// import useStore from '../stores/hooks'
+// import { IFollowers } from '../types/follow'
+// import { Box, Typography } from '@mui/material'
+// import { api } from '../libs/api'
 
 const Followers = () => {
   // const {user} = useStore()

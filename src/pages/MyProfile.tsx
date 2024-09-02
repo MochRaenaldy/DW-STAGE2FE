@@ -1,12 +1,12 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { Avatar, Box, Button, Checkbox, Container, Typography } from "@mui/material";
+import { useNavigate, } from "react-router-dom";
+import { Avatar, Box, Button, Container, Typography } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import EditProfile from "../components/editProfile";
 import { useEffect, useState } from "react";
-import { getUserById } from "../libs/api/call/user";
+
 import useStore from "../stores/hooks";
 import { getAllPostByUserId } from "../libs/api/call/home";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
+
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import Media from "./Media";
 import Like from "../components/Like/like";

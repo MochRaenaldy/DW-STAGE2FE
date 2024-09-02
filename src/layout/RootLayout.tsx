@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 import Sidebar from "../components/sidebar";
-import useStore from "../stores/hooks";
+
 import Rightbar from "../components/rightbar/right";
 
 const RootLayout = () => {

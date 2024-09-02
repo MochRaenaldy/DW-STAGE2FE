@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { api, setAuthToken } from "./libs/api";
+import {  setAuthToken } from "./libs/api";
 import * as authAsync from "./libs/api/call/auth";
 import routes from "./routes/routes";
 import useStore from "./stores/hooks";
