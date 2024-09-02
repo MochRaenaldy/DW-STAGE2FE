@@ -58,6 +58,42 @@ export const update = async (id: number, update: IUser) => {
   return updatedUser;
 };
 
+export const listfollower = async (id: number) => {
+  const res = await db.follow.findMany({
+    where: { followingId: id },
+    include: {
+      followers: {
+        select: {
+          id: true,
+          username: true,
+          profile_pic: true,
+          fullName: true,
+        },
+      },
+    }
+}
+);
+return res
+}
+
+export const listfollowing = async (id: number) => {
+  const res = await db.follow.findMany({
+    where: { followingId: id },
+    include: {
+      following: {
+        select: {
+          id: true,
+          username: true,
+          profile_pic: true,
+          fullName: true,
+        },
+      },
+    }
+  }
+);
+return res
+}
+
 
 export const countFollow = async (id: number) => {
   const res = await db.user.findUnique({

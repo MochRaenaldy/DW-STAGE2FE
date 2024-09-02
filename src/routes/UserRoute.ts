@@ -16,6 +16,10 @@ userRoute.get("/userlogin/:userId", userController.findbyuserlogin);
 
 userRoute.get("/follows/:id", userController.countFoll);
 
+userRoute.get("/following/:id", userController.userFollowing);
+
+userRoute.get("/follower/:id", userController.userFollower);
+
 // userRoute.delete("/:id", userController.remove);
 
 export default userRoute;

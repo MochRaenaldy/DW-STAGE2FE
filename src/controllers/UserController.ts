@@ -51,6 +51,16 @@ export const countFoll = async (req: Request, res: Response) => {
   }
 };
 
+export const userFollowing = async (req: Request, res: Response) => {
+  const user = await userservice.listfollowing(parseInt(req.params.id));
+  res.json(user);
+}
+
+export const userFollower = async (req: Request, res: Response) => {
+  const user = await userservice.listfollower(parseInt(req.params.id));
+  res.json(user);
+}
+
 
 
 // export const remove = (req: Request, res: Response) => {
