@@ -24,7 +24,8 @@ interface IModal {
 
 const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
   const refImage: any = useRef(null);
-  const [photo, setPhoto] = useState<any>(null);
+  // const [photo] = useState<any>(null);
+  const [setPhoto] = useState<any>(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [successPost, setSuccessPost] = useState(false);
   const [message, setMessage] = useState("");
@@ -101,8 +102,7 @@ const EditProfile: React.FC<IModal> = ({ open, onClose }) => {
               onClick={() => refImage.current.click()}>
               <Avatar
                 ref={refImage}
-                src={
-                  photo ||
+                src={`${user.profile_pic}` ||
                   "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png"
                 }
                 sx={{
