@@ -73,7 +73,7 @@ const Detail = () => {
     formData.append("content", input);
     if (photo) {
       for (let i = 0; i < photo.length; i++) {
-        formData.append("images", photo[i]);
+        formData.append("files", photo[i]);
       }
     }
     const response = await addReplies(formData);
