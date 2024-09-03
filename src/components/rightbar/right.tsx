@@ -21,7 +21,7 @@ const Rightbar = () => {
   const { user ,getUsers, users} = useStore();
   // const params = useParams();
   const userId = user.id;
-  const [photo] = useState<any>(null);
+  // const [photo, setPhoto] = useState<any>(null);
   const [dataUser, setDataUser] = useState<IUserList[]>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   // const [isFollow, setisFollow] = useState(false);
