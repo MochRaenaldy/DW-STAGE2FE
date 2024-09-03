@@ -132,10 +132,10 @@ const Profile = () => {
         </Typography>
 
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
-          <span style={{ color: "gray" }}>{follows}Follow</span>{" "}
+          <span style={{ color: "gray" }}>{follows}Followers</span>{" "}
           {
             <span style={{ color: "gray" }}>
-              {followers} Followers 
+              {followers} Following 
               {/*dataUser.followers*/}{" "}
             </span>
           }
