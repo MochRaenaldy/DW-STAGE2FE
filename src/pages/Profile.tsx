@@ -258,7 +258,7 @@ const Profile = () => {
                 Follow
               </button>
             )}{" "}
-            disabled = {loading}
+            {loading}
           </Box>
           <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1, mt: 3 }}>
             {dataUser.username}

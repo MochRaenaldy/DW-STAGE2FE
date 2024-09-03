@@ -307,7 +307,7 @@ const Rightbar = () => {
                         Follow
                       </button>
                     )}
-                    disabled = {loading}
+                    {loading}
                   </div>
                 </div>
               );

@@ -188,7 +188,7 @@ const SearchPage = () => {
                       Follow
                     </button>
                   )}
-                  disabled = {loading}
+                  {loading}
                 </div>
               </div>
             );
