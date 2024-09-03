@@ -115,7 +115,7 @@ const Profile = () => {
           </button>
         </Box>
         <Typography variant="body1" sx={{ fontWeight: "bold", ml: 1 }}>
-          {user.fullName}
+          {user.username}
         </Typography>
 
         <Typography variant="body2" sx={{ fontWeight: "bold", ml: 2 }}>
