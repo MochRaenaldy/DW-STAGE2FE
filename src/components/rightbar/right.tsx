@@ -148,8 +148,7 @@ const Rightbar = () => {
             }}>
             <Avatar sx={{ bgcolor: "red", width: "70px", height: "70px" }}>
               <img
-                src={
-                  photo ||
+                src={`${user.profile_pic}` ||
                   "https://rerollcdn.com/GENSHIN/Characters/1/Clorinde.png"
                 }
               />
